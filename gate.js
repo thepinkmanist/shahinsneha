@@ -12,7 +12,7 @@ const GATE_KEY = "wedding-visitor-verified";
 
 // Fill this in after deploying the Apps Script web app (see SETUP.md).
 // Leave as-is to skip logging — the gate still works, it just won't record anyone.
-const GATE_WEBHOOK_URL = "";
+const GATE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxz1kANJJdVKgGrxKCVvqNOG60RsO3KHuFQIhtoaZvKZnwQGgd0e7LjWlcaOkoiXTAw8Q/exec";
 
 function initGate() {
   if (localStorage.getItem(GATE_KEY)) return;

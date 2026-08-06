@@ -64,7 +64,9 @@ function setHeaderImage() {
   }
   if (state.photos.length) {
     const pick = state.photos[Math.floor(state.photos.length / 3)];
-    img.src = `photos/${state.slug}/thumb/${pick.thumb}`;
+    // Full-res, not the 480px grid thumbnail — this banner renders much
+    // wider than the thumbnail, so the small version would look blurry.
+    img.src = `photos/${state.slug}/full/${pick.file}`;
   }
 }
 
