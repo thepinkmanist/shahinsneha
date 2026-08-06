@@ -61,10 +61,24 @@ function play({ fade = false } = {}) {
     audio.currentTime = s.position || 0;
   }
   audio.volume = fade ? 0 : vol;
-  audio.play().catch(() => {}); // browsers block autoplay until a user gesture; the sticky button IS that gesture
-  if (fade) fadeVolumeTo(vol, FADE_MS);
-  saveState({ playing: true, volume: vol });
-  refreshUI();
+
+  // Mobile browsers silently reject play() unless it's called directly
+  // inside a fresh tap — that happens for the sticky button itself, but
+  // NOT for resuming on a new page load or the slideshow auto-starting
+  // it. Only mark state as "playing" once playback actually starts, so
+  // a blocked attempt leaves the wiggling button inviting a real tap
+  // instead of lying about what's audible.
+  audio
+    .play()
+    .then(() => {
+      if (fade) fadeVolumeTo(vol, FADE_MS);
+      saveState({ playing: true, volume: vol });
+      refreshUI();
+    })
+    .catch(() => {
+      saveState({ playing: false });
+      refreshUI();
+    });
 }
 
 function pause() {
