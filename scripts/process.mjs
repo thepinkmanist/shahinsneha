@@ -14,6 +14,7 @@ const SRC_ROOT = path.join(ROOT, "photos");
 const DATA_ROOT = path.join(ROOT, "data");
 
 const EVENTS = [
+  { dir: "prewedding", slug: "prewedding", fallbackDate: "2026-04-20" },
   { dir: "Registration", slug: "registration", fallbackDate: "2026-05-07" },
   { dir: "Reception 1", slug: "reception1", fallbackDate: "2026-05-09" },
   { dir: "Reception 2", slug: "reception2", fallbackDate: "2026-05-17" },

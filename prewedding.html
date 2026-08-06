@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pre-Wedding Photoshoot — Shahin &amp; Sneha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-event="prewedding">
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="topbar glass">
+  <a class="back-link" href="index.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    <span data-i18n="backHome">Back to home</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;justify-content:flex-end;">
+    <a class="fav-link" href="favorites.html">
+      <svg viewBox="0 0 24 24"><path d="M12 2.5l3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.8 5.6 21.8l1.6-7.1-5.4-4.9 7.2-.7z"/></svg>
+      <span data-i18n="starredNav">Starred</span>
+      <span class="fav-link__count" data-favorites-count>0</span>
+    </a>
+  </div>
+</div>
+
+<header class="gallery-header">
+  <div class="gallery-header__bg"><img id="headerImg" alt="" loading="eager"></div>
+  <div class="gallery-header__overlay"></div>
+  <div class="gallery-header__content">
+    <p class="gallery-header__date" data-i18n="preweddingDate">1 May 2026</p>
+    <h1 class="gallery-header__title" data-i18n="preweddingTitle">Pre-Wedding Photoshoot</h1>
+    <p class="gallery-header__count" id="photoCount"></p>
+  </div>
+</header>
+
+<div class="gallery-toolbar glass">
+  <button class="action-btn" id="downloadAllBtn" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+    <span data-i18n="downloadAll">Download all</span>
+  </button>
+  <p class="progress-note" id="progressNote"></p>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer data-i18n="footerNote">Made with love for our families and friends.</footer>
+
+<!-- Lightbox -->
+<div class="lightbox hidden" id="lightbox">
+  <div class="lightbox__counter" id="lightboxCounter"></div>
+  <div class="lightbox__bar">
+    <button class="icon-btn" id="slideshowBtn" data-i18n-attr="title:slideshow" title="Slideshow">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="icon-btn star-btn" id="starBtn" data-i18n-attr="title:star" title="Star this photo">
+      <svg viewBox="0 0 24 24"><path d="M12 2.5l3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.8 5.6 21.8l1.6-7.1-5.4-4.9 7.2-.7z"/></svg>
+    </button>
+    <button class="icon-btn" id="shareBtn" data-i18n-attr="title:share" title="Share this photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+    </button>
+    <a class="icon-btn" id="downloadBtn" download data-i18n-attr="title:download" title="Download this photo">&#8681;</a>
+    <button class="icon-btn" id="closeLightbox" data-i18n-attr="title:close" title="Close">&#10005;</button>
+  </div>
+  <button class="lightbox__nav lightbox__prev" id="prevBtn" data-i18n-attr="title:previous" title="Previous">&#10094;</button>
+  <img id="lightboxImg" alt="">
+  <button class="lightbox__nav lightbox__next" id="nextBtn" data-i18n-attr="title:next" title="Next">&#10095;</button>
+  <p class="lightbox__hint" data-i18n="zoomHint">Tap to zoom</p>
+</div>
+
+<script src="i18n.js"></script>
+<script src="gate.js"></script>
+<script src="favorites.js"></script>
+<script type="module" src="gallery.js"></script>
+</body>
+</html>

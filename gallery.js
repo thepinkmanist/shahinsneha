@@ -11,6 +11,7 @@ import { zipAndDownload } from "./zip.js";
 import { attachZoom } from "./zoomable.js";
 
 const COVER_OVERRIDES = {
+  prewedding: "photos/covers/pre-wedding-cover.png",
   registration: "photos/covers/Registration-cover.png",
   reception1: "photos/covers/Reception-1-cover.png",
   reception2: "photos/covers/Reception-2-cover.png",

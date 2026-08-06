@@ -7,7 +7,7 @@
 
 import { attachZoom } from "./zoomable.js";
 
-const ALL_SLUGS = ["registration", "reception1", "reception2"];
+const ALL_SLUGS = ["prewedding", "registration", "reception1", "reception2"];
 
 const el = {
   lightboxImg: document.getElementById("lightboxImg"),

@@ -8,18 +8,20 @@
 import { zipAndDownload } from "./zip.js";
 
 const YOUTUBE_ID = "F7Mp6Bj_bJ4";
-const ALL_SLUGS = ["registration", "reception1", "reception2"];
+const ALL_SLUGS = ["prewedding", "registration", "reception1", "reception2"];
 
 const HERO_IMAGE = "photos/covers/home-page-cover.png";
 
 // A fixed hand-picked cover photo, used instead of an auto-picked one.
 const COVER_OVERRIDES = {
+  prewedding: "photos/covers/pre-wedding-cover.png",
   registration: "photos/covers/Registration-cover.png",
   reception1: "photos/covers/Reception-1-cover.png",
   reception2: "photos/covers/Reception-2-cover.png",
 };
 
 const COVERS = [
+  { slug: "prewedding", elId: "coverPrewedding" },
   { slug: "registration", elId: "coverRegistration" },
   { slug: "reception1", elId: "coverReception1" },
   { slug: "reception2", elId: "coverReception2" },

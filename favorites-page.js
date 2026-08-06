@@ -10,6 +10,7 @@ import { zipAndDownload } from "./zip.js";
 import { attachZoom } from "./zoomable.js";
 
 const EVENT_TITLES = {
+  prewedding: "preweddingTitle",
   registration: "registrationTitle",
   reception1: "receptionOneTitle",
   reception2: "receptionTwoTitle",

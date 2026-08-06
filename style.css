@@ -419,24 +419,80 @@ footer {
   color: var(--muted);
   font-size: 0.9rem;
 }
+footer p { margin: 0 0 0.6rem; }
+footer .text-link-btn { font-size: 0.8rem; opacity: 0.75; }
+footer .progress-note { margin-top: 0.4rem; }
 
-/* ---------- Favorites (heart) link in topbar ---------- */
+/* ---------- Slideshow call-to-action (home page) ---------- */
+
+.slideshow-cta-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.slideshow-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, var(--forest), var(--forest-deep));
+  color: #fff;
+  text-decoration: none;
+  padding: 0.9rem 1.6rem 0.9rem 1rem;
+  border-radius: 999px;
+  box-shadow: 0 14px 34px rgba(43, 61, 46, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.slideshow-cta:hover { transform: translateY(-3px); box-shadow: 0 20px 44px rgba(43, 61, 46, 0.42); }
+
+.slideshow-cta__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.slideshow-cta__icon svg { width: 22px; height: 22px; fill: #fff; margin-left: 2px; }
+
+.slideshow-cta__text { display: flex; flex-direction: column; text-align: left; }
+.slideshow-cta__text strong { font-size: 1.1rem; font-family: var(--font-display); font-weight: 600; }
+.slideshow-cta__text small { font-size: 0.82rem; opacity: 0.85; }
+
+/* ---------- Starred-photos link in topbar ---------- */
 
 .fav-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   text-decoration: none;
   color: var(--forest-deep);
   font-weight: 700;
-  font-size: 0.95rem;
-  background: rgba(255,255,255,0.5);
-  border: 1px solid rgba(255,255,255,0.7);
-  padding: 0.5rem 0.9rem;
+  font-size: 0.92rem;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.75);
+  padding: 0.5rem 0.95rem;
   border-radius: 999px;
   min-height: 40px;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
-.fav-link svg { width: 18px; height: 18px; fill: #c1387b; }
+.fav-link:hover { background: rgba(255,255,255,0.8); transform: translateY(-1px); }
+.fav-link svg { width: 16px; height: 16px; fill: var(--gold); }
+.fav-link__count {
+  background: var(--forest);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* ---------- Gallery toolbar (download all / selections) ---------- */
 
