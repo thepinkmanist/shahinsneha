@@ -10,9 +10,13 @@ import { zipAndDownload } from "./zip.js";
 const YOUTUBE_ID = "F7Mp6Bj_bJ4";
 const ALL_SLUGS = ["registration", "reception1", "reception2"];
 
-// A fixed override photo, used instead of the auto-picked one when set.
+const HERO_IMAGE = "photos/covers/home-page-cover.png";
+
+// A fixed hand-picked cover photo, used instead of an auto-picked one.
 const COVER_OVERRIDES = {
-  reception1: "photos/covers/reception1-cover.jpg",
+  registration: "photos/covers/Registration-cover.png",
+  reception1: "photos/covers/Reception-1-cover.png",
+  reception2: "photos/covers/Reception-2-cover.png",
 };
 
 const COVERS = [
@@ -27,22 +31,9 @@ async function init() {
   setupVideoFacade();
   setupDownloadEverything();
   setupShareGallery();
-  await Promise.all([loadHero(), ...COVERS.map(loadCover)]);
-}
-
-async function loadHero() {
-  const img = document.getElementById("heroImg");
-  if (!img) return;
-  try {
-    const res = await fetch("data/registration.json");
-    const list = await res.json();
-    if (!list.length) return;
-    const pick = list[Math.floor(list.length / 3)];
-    // Full-res — this banner renders far wider than any grid thumbnail.
-    img.src = `photos/registration/full/${pick.file}`;
-  } catch (err) {
-    console.error("Could not load hero image", err);
-  }
+  const heroImg = document.getElementById("heroImg");
+  if (heroImg) heroImg.src = HERO_IMAGE;
+  await Promise.all(COVERS.map(loadCover));
 }
 
 function setupShareGallery() {
