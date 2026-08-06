@@ -84,10 +84,16 @@
     <h2 data-i18n="findFaces">Find someone in the photos</h2>
     <p data-i18n="findFacesBody">Upload one or more clear, front-facing selfies. Everything runs on this device — nothing is uploaded anywhere.</p>
     <div class="selfie-list" id="selfieList"></div>
-    <label class="upload-label" id="uploadLabel">
-      <span data-i18n="addAnotherSelfie">Add another selfie</span>
-      <input type="file" accept="image/*" id="selfieInput" multiple>
-    </label>
+    <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;">
+      <label class="upload-label" id="uploadLabel">
+        <span data-i18n="addAnotherSelfie">Add a selfie</span>
+        <input type="file" accept="image/*" id="selfieInput" multiple>
+      </label>
+      <label class="upload-label" id="cameraLabel">
+        <span data-i18n="takePhoto">Take a photo</span>
+        <input type="file" accept="image/*" capture="user" id="cameraInput">
+      </label>
+    </div>
     <button class="action-btn" id="searchFacesBtn" type="button" data-i18n="searchFaces">Search photos</button>
     <div class="status-line" id="faceStatus"></div>
     <button class="action-btn secondary hidden" id="downloadMatchesBtn" type="button" data-i18n="downloadMatches">Download all matches</button>
