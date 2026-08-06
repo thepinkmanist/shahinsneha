@@ -43,6 +43,7 @@ async function init() {
 
   showCurrent();
   startSlideshow();
+  setupMusic();
 
   el.prevBtn.addEventListener("click", () => { stopSlideshow(); step(-1); });
   el.nextBtn.addEventListener("click", () => { stopSlideshow(); step(1); });
@@ -52,6 +53,39 @@ async function init() {
     if (e.key === "ArrowLeft") { stopSlideshow(); step(-1); }
     if (e.key === "ArrowRight") { stopSlideshow(); step(1); }
   });
+}
+
+function setupMusic() {
+  if (!window.WeddingMusic) return;
+
+  const muteBtn = document.getElementById("slideshowMusicMute");
+  const icon = document.getElementById("slideshowMusicIcon");
+  const volume = document.getElementById("slideshowMusicVolume");
+  if (!muteBtn || !volume) return;
+
+  const MUTED_ICON = '<path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+  const PLAYING_ICON = '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
+
+  function sync(state) {
+    volume.value = state.volume ?? window.WeddingMusic.getVolume();
+    icon.innerHTML = state.playing ? PLAYING_ICON : MUTED_ICON;
+    muteBtn.title = state.playing ? "Mute music" : "Play music";
+  }
+
+  window.WeddingMusic.onChange(sync);
+
+  muteBtn.addEventListener("click", () => {
+    if (window.WeddingMusic.isPlaying()) window.WeddingMusic.pause();
+    else window.WeddingMusic.play({ fade: false });
+  });
+
+  volume.addEventListener("input", () => window.WeddingMusic.setVolume(parseFloat(volume.value)));
+
+  // If nobody had already turned music on elsewhere on the site, the
+  // slideshow starts it fresh with the long fade-in described for it.
+  if (!window.WeddingMusic.isPlaying()) {
+    window.WeddingMusic.play({ fade: true });
+  }
 }
 
 function step(dir) {

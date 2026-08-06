@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="style.css">
 <style>body{background:#0f0e0a;}</style>
 </head>
-<body>
+<body data-no-music-widget>
 
 <div class="lightbox" id="lightbox" style="position:fixed;">
   <div class="lightbox__counter" id="lightboxCounter"></div>
@@ -22,10 +22,17 @@
   <button class="lightbox__nav lightbox__prev" id="prevBtn" data-i18n-attr="title:previous" title="Previous">&#10094;</button>
   <img id="lightboxImg" alt="">
   <button class="lightbox__nav lightbox__next" id="nextBtn" data-i18n-attr="title:next" title="Next">&#10095;</button>
+  <div class="slideshow-music">
+    <input type="range" id="slideshowMusicVolume" class="slideshow-music__volume" min="0" max="1" step="0.05" aria-label="Music volume">
+    <button type="button" class="icon-btn" id="slideshowMusicMute" title="Mute music">
+      <svg id="slideshowMusicIcon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </button>
+  </div>
 </div>
 
 <script src="i18n.js"></script>
 <script src="gate.js"></script>
+<script src="music.js"></script>
 <script type="module" src="slideshow.js"></script>
 </body>
 </html>
