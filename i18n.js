@@ -71,6 +71,12 @@ const translations = {
     gatePhonePlaceholder: "Phone number",
     gateSubmit: "Continue",
     gateError: "Please fill in both your name and phone number.",
+    passwordTitle: "State the secret words 🧙",
+    passwordBody: "This vault is protected by an extremely serious security system. Enter the magic word to proceed (hint: it's a date, and nobody needs the year).",
+    passwordPlaceholder: "Secret word…",
+    passwordSubmit: "Unlock",
+    passwordSuccessTitle: "You're in!",
+    passwordSuccessBody: "The guard llama stands down. Welcome, honored guest.",
   },
   ml: {
     siteTitle: "ഷാഹിൻ & സ്നേഹ",
