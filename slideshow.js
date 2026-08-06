@@ -64,7 +64,7 @@ function setupMusic() {
   if (!muteBtn || !volume) return;
 
   const MUTED_ICON = '<path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
-  const PLAYING_ICON = '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
+  const PLAYING_ICON = '<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>';
 
   function sync(state) {
     volume.value = state.volume ?? window.WeddingMusic.getVolume();
