@@ -96,7 +96,14 @@
     </div>
     <button class="action-btn" id="searchFacesBtn" type="button" data-i18n="searchFaces">Search photos</button>
     <div class="status-line" id="faceStatus"></div>
-    <button class="action-btn secondary hidden" id="downloadMatchesBtn" type="button" data-i18n="downloadMatches">Download all matches</button>
+    <div class="face-results hidden" id="faceResults"></div>
+    <div class="face-results-actions hidden" id="faceResultsActions">
+      <button class="text-link-btn" id="selectAllBtn" type="button" data-i18n="selectAll">Select all</button>
+      <button class="text-link-btn" id="selectNoneBtn" type="button" data-i18n="selectNone">Deselect all</button>
+    </div>
+    <button class="action-btn secondary hidden" id="downloadMatchesBtn" type="button">
+      <span data-i18n="downloadSelectedMatches">Download selected</span> (<span id="downloadSelectedCount">0</span>)
+    </button>
   </div>
 </div>
 

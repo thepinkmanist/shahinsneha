@@ -831,6 +831,73 @@ footer {
   margin-top: 1rem;
 }
 
+.face-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+  margin-top: 1rem;
+  max-height: 40vh;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.face-result {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.face-result img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.15s ease;
+}
+
+.face-result__check {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.face-result.deselected img { opacity: 0.32; }
+.face-result.deselected .face-result__check { background: rgba(255,255,255,0.85); color: transparent; border: 2px solid rgba(0,0,0,0.25); }
+
+.face-results-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.text-link-btn {
+  background: none;
+  border: none;
+  color: var(--forest-deep);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  min-height: var(--tap-min);
+  padding: 0 0.3rem;
+}
+
 .modal__card .action-btn { margin-top: 0.6rem; }
 .modal__card .action-btn + .action-btn { margin-left: 0; }
 
@@ -912,6 +979,14 @@ footer {
   .hero { padding: 2.6rem 1.4rem; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
   .lightbox__nav { width: 46px; height: 46px; font-size: 1.2rem; }
+
+  /* The counter badge and the row of action icons both fought for the same
+     top corner and overlapped — give the icons the whole top row, and move
+     the counter down to the bottom where the (now-hidden) zoom hint was. */
+  .lightbox__bar { top: 0.7rem; right: 0.7rem; gap: 0.5rem; left: 0.7rem; justify-content: flex-end; }
+  .lightbox__counter { top: auto; bottom: 1.1rem; left: 50%; transform: translateX(-50%); }
+  .lightbox__hint { display: none; }
+  .icon-btn { width: 44px; height: 44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

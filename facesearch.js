@@ -22,7 +22,12 @@ const el = {
   cameraInput: document.getElementById("cameraInput"),
   searchBtn: document.getElementById("searchFacesBtn"),
   status: document.getElementById("faceStatus"),
+  results: document.getElementById("faceResults"),
+  resultsActions: document.getElementById("faceResultsActions"),
+  selectAllBtn: document.getElementById("selectAllBtn"),
+  selectNoneBtn: document.getElementById("selectNoneBtn"),
   downloadMatchesBtn: document.getElementById("downloadMatchesBtn"),
+  downloadSelectedCount: document.getElementById("downloadSelectedCount"),
 };
 
 if (el.openBtn) {
@@ -30,7 +35,7 @@ if (el.openBtn) {
     modelsLoaded: false,
     faceIndex: null, // [{slug, file, descriptors:[[...]]}] once loaded, across all events
     queryDescriptors: [], // one per uploaded selfie
-    matches: [], // [{slug, file}]
+    matches: [], // [{slug, file, selected}]
   };
 
   el.openBtn.addEventListener("click", () => el.modal.classList.remove("hidden"));
@@ -38,6 +43,8 @@ if (el.openBtn) {
   el.selfieInput.addEventListener("change", onSelfiesSelected);
   if (el.cameraInput) el.cameraInput.addEventListener("change", onSelfiesSelected);
   el.searchBtn.addEventListener("click", runSearch);
+  el.selectAllBtn.addEventListener("click", () => setAllSelected(true));
+  el.selectNoneBtn.addEventListener("click", () => setAllSelected(false));
   el.downloadMatchesBtn.addEventListener("click", downloadMatches);
 
   async function ensureModels() {
@@ -72,7 +79,7 @@ if (el.openBtn) {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
     el.status.textContent = "";
-    el.downloadMatchesBtn.classList.add("hidden");
+    hideResults();
 
     try {
       await ensureModels();
@@ -103,7 +110,7 @@ if (el.openBtn) {
   async function runSearch() {
     if (!state.queryDescriptors.length) return;
     el.status.textContent = t("searchingFaces");
-    el.downloadMatchesBtn.classList.add("hidden");
+    hideResults();
 
     const index = await ensureFaceIndex();
     if (!index.length) {
@@ -116,7 +123,7 @@ if (el.openBtn) {
       const isMatch = entry.descriptors.some((faceDesc) =>
         state.queryDescriptors.some((queryDesc) => euclideanDistance(faceDesc, queryDesc) < MATCH_THRESHOLD)
       );
-      if (isMatch) matched.push({ slug: entry.slug, file: entry.file });
+      if (isMatch) matched.push({ slug: entry.slug, file: entry.file, selected: true });
     });
 
     state.matches = matched;
@@ -126,11 +133,60 @@ if (el.openBtn) {
       return;
     }
     el.status.textContent = t("facesFound", { n: matched.length });
+    renderResults();
+  }
+
+  function hideResults() {
+    el.results.innerHTML = "";
+    el.results.classList.add("hidden");
+    el.resultsActions.classList.add("hidden");
+    el.downloadMatchesBtn.classList.add("hidden");
+  }
+
+  function renderResults() {
+    el.results.innerHTML = "";
+    state.matches.forEach((m, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "face-result";
+      const img = document.createElement("img");
+      img.src = `photos/${m.slug}/thumb/${m.file}`;
+      img.loading = "lazy";
+      img.alt = "";
+      const check = document.createElement("span");
+      check.className = "face-result__check";
+      check.textContent = "✓";
+      btn.appendChild(img);
+      btn.appendChild(check);
+      btn.addEventListener("click", () => {
+        m.selected = !m.selected;
+        btn.classList.toggle("deselected", !m.selected);
+        updateSelectedCount();
+      });
+      el.results.appendChild(btn);
+    });
+    el.results.classList.remove("hidden");
+    el.resultsActions.classList.remove("hidden");
     el.downloadMatchesBtn.classList.remove("hidden");
+    updateSelectedCount();
+  }
+
+  function setAllSelected(selected) {
+    state.matches.forEach((m) => (m.selected = selected));
+    [...el.results.children].forEach((btn) => btn.classList.toggle("deselected", !selected));
+    updateSelectedCount();
+  }
+
+  function updateSelectedCount() {
+    const n = state.matches.filter((m) => m.selected).length;
+    el.downloadSelectedCount.textContent = n;
+    el.downloadMatchesBtn.disabled = n === 0;
   }
 
   async function downloadMatches() {
-    const items = state.matches.map((m) => ({
+    const selected = state.matches.filter((m) => m.selected);
+    if (!selected.length) return;
+    const items = selected.map((m) => ({
       name: `${m.slug}/${m.file}`,
       url: `photos/${m.slug}/full/${m.file}`,
     }));
@@ -141,7 +197,7 @@ if (el.openBtn) {
       });
       el.status.textContent = t("zipReady");
     } finally {
-      el.downloadMatchesBtn.disabled = false;
+      updateSelectedCount();
     }
   }
 }
