@@ -21,17 +21,28 @@ const COVERS = [
   { slug: "reception2", elId: "coverReception2" },
 ];
 
-const HERO_IMAGE = "photos/covers/reception1-cover.jpg";
-
 init();
 
 async function init() {
   setupVideoFacade();
   setupDownloadEverything();
   setupShareGallery();
-  const heroImg = document.getElementById("heroImg");
-  if (heroImg) heroImg.src = HERO_IMAGE;
-  await Promise.all(COVERS.map(loadCover));
+  await Promise.all([loadHero(), ...COVERS.map(loadCover)]);
+}
+
+async function loadHero() {
+  const img = document.getElementById("heroImg");
+  if (!img) return;
+  try {
+    const res = await fetch("data/registration.json");
+    const list = await res.json();
+    if (!list.length) return;
+    const pick = list[Math.floor(list.length / 3)];
+    // Full-res — this banner renders far wider than any grid thumbnail.
+    img.src = `photos/registration/full/${pick.file}`;
+  } catch (err) {
+    console.error("Could not load hero image", err);
+  }
 }
 
 function setupShareGallery() {
@@ -65,7 +76,9 @@ async function loadCover({ slug, elId }) {
     const list = await res.json();
     if (!list.length) return;
     const pick = list[Math.floor(list.length / 3)];
-    img.src = `photos/${slug}/thumb/${pick.thumb}`;
+    // Full-res — event cards render larger than the 480px grid thumbnail,
+    // especially on high-DPI screens, where the thumbnail looked soft.
+    img.src = `photos/${slug}/full/${pick.file}`;
   } catch (err) {
     console.error("Could not load cover for", slug, err);
   }
