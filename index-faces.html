@@ -34,7 +34,8 @@
     Run this once (from this page, in a normal browser tab — not automation)
     to let visitors search "find someone in the photos" on each gallery page.
     Everything happens on this device; nothing is uploaded anywhere. It takes
-    a few minutes. When it's done, three files download automatically —
+    a while (it's checking full-resolution photos this time, for better
+    accuracy) — leave the tab open and focused. When it's done, three files download automatically —
     drop them into the <code>data/</code> folder in this project and push.
   </p>
 
@@ -104,9 +105,13 @@ async function indexEvent(slug) {
   for (let i = 0; i < list.length; i++) {
     const photo = list[i];
     try {
-      const img = await loadImage(`photos/${slug}/thumb/${photo.thumb}`);
+      // Full-res, not the 480px grid thumbnail — group/wide shots shrink
+      // faces down to just a few pixels in a thumbnail, which the detector
+      // misses. Also widen the detector's input and loosen its confidence
+      // threshold a bit, both of which help catch smaller/angled faces.
+      const img = await loadImage(`photos/${slug}/full/${photo.file}`);
       const detections = await faceapi
-        .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions())
+        .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.4 }))
         .withFaceLandmarks()
         .withFaceDescriptors();
       if (detections.length) {
