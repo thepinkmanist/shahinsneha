@@ -1,0 +1,18 @@
+{
+  "name": "wedding-gallery",
+  "version": "1.0.0",
+  "description": "A free, permanent, private wedding gallery you host yourself on GitHub Pages — with photos grouped by person, and an optional \"upload a selfie, find your photos\" search. Everything runs in the browser; there's no paid server, no database, and no monthly bill.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "client-zip": "^2.5.0",
+    "exifr": "^7.1.3",
+    "face-api.js": "^0.22.2",
+    "sharp": "^0.35.3"
+  }
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Shahin &amp; Sneha — Wedding Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="topbar glass">
+  <a class="topbar__brand" href="index.html" data-i18n="siteTitle">Shahin &amp; Sneha</a>
+  <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;justify-content:flex-end;">
+    <a class="fav-link" href="favorites.html">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1 10 1.6 6.6 4.4 5.1 6.6 3.9 9 4.6 12 7.6c3-3 5.4-3.7 7.6-2.5 2.8 1.5 3.4 4.9 1.7 7.8C18.7 16.65 12 21 12 21z"/></svg>
+      <span data-i18n="myPhotos">My photos</span> (<span data-favorites-count>0</span>)
+    </a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hero__bg"><img id="heroImg" alt="" loading="eager"></div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content glass">
+    <p class="hero__eyebrow" data-i18n="eyebrow">Our Wedding</p>
+    <h1 class="hero__names" data-i18n="siteTitle">Shahin &amp; Sneha</h1>
+    <p class="hero__tagline" data-i18n="tagline">A private gallery for our family and friends.</p>
+    <button class="action-btn" id="shareGalleryBtn" type="button" style="margin-top:1.3rem;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+      <span data-i18n="shareGallery">Share this gallery</span>
+    </button>
+  </div>
+</header>
+
+<section class="video-section glass">
+  <h2 data-i18n="watchHighlights">Watch our highlights</h2>
+  <div class="video-frame" id="videoFrame">
+    <img id="videoThumb" alt="" loading="lazy">
+    <button class="play-btn" id="playBtn" type="button" data-i18n-attr="aria-label:playVideo" aria-label="Play video">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+  </div>
+</section>
+
+<section class="events">
+  <h2 data-i18n="eventsHeading">The Celebrations</h2>
+  <div class="event-grid">
+
+    <a class="event-card glass" href="registration.html">
+      <div class="event-card__photo"><img id="coverRegistration" alt="" loading="lazy"></div>
+      <div class="event-card__body">
+        <p class="event-card__date" data-i18n="registrationDate">7 May 2026</p>
+        <h3 class="event-card__title" data-i18n="registrationTitle">Registration</h3>
+        <span class="event-card__cta" data-i18n="viewGallery">View gallery →</span>
+      </div>
+    </a>
+
+    <a class="event-card glass" href="reception1.html">
+      <div class="event-card__photo"><img id="coverReception1" alt="" loading="lazy"></div>
+      <div class="event-card__body">
+        <p class="event-card__date" data-i18n="receptionOneDate">9 May 2026</p>
+        <h3 class="event-card__title" data-i18n="receptionOneTitle">Reception — Groom's Side</h3>
+        <span class="event-card__cta" data-i18n="viewGallery">View gallery →</span>
+      </div>
+    </a>
+
+    <a class="event-card glass" href="reception2.html">
+      <div class="event-card__photo"><img id="coverReception2" alt="" loading="lazy"></div>
+      <div class="event-card__body">
+        <p class="event-card__date" data-i18n="receptionTwoDate">17 May 2026</p>
+        <h3 class="event-card__title" data-i18n="receptionTwoTitle">Reception — Bride's Side</h3>
+        <span class="event-card__cta" data-i18n="viewGallery">View gallery →</span>
+      </div>
+    </a>
+
+  </div>
+  <div class="gallery-toolbar" style="margin-top:1.75rem;">
+    <a class="action-btn secondary" href="slideshow.html">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      <span data-i18n="slideshow">Slideshow</span>
+    </a>
+    <button class="action-btn secondary" id="downloadEverythingBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+      <span data-i18n="downloadAllEvents">Download every photo (all events)</span>
+    </button>
+    <p class="progress-note" id="progressNote"></p>
+  </div>
+</section>
+
+<section class="socials glass">
+  <h2 data-i18n="followUs">Follow us</h2>
+  <div class="social-links">
+    <a class="social-link" href="https://www.instagram.com/shahinms_/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12.87 1.33H12Zm0 1.8c-3.15 0-3.5.01-4.73.07-1.03.05-1.6.22-1.97.36-.5.19-.85.42-1.22.79-.37.37-.6.72-.79 1.22-.14.37-.31.94-.36 1.97-.06 1.23-.07 1.58-.07 4.73s.01 3.5.07 4.73c.05 1.03.22 1.6.36 1.97.19.5.42.85.79 1.22.37.37.72.6 1.22.79.37.14.94.31 1.97.36 1.23.06 1.58.07 4.73.07s3.5-.01 4.73-.07c1.03-.05 1.6-.22 1.97-.36.5-.19.85-.42 1.22-.79.37-.37.6-.72.79-1.22.14-.37.31-.94.36-1.97.06-1.23.07-1.58.07-4.73s-.01-3.5-.07-4.73c-.05-1.03-.22-1.6-.36-1.97a3.1 3.1 0 0 0-.79-1.22 3.1 3.1 0 0 0-1.22-.79c-.37-.14-.94-.31-1.97-.36C15.5 4.01 15.15 4 12 4Zm0 3.05a4.95 4.95 0 1 1 0 9.9 4.95 4.95 0 0 1 0-9.9Zm0 1.8a3.15 3.15 0 1 0 0 6.3 3.15 3.15 0 0 0 0-6.3Zm5.15-1.99a1.16 1.16 0 1 1-2.31 0 1.16 1.16 0 0 1 2.31 0Z"/></svg>
+      Shahin
+    </a>
+    <a class="social-link" href="https://www.instagram.com/sneha.jayakumar/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12.87 1.33H12Zm0 1.8c-3.15 0-3.5.01-4.73.07-1.03.05-1.6.22-1.97.36-.5.19-.85.42-1.22.79-.37.37-.6.72-.79 1.22-.14.37-.31.94-.36 1.97-.06 1.23-.07 1.58-.07 4.73s.01 3.5.07 4.73c.05 1.03.22 1.6.36 1.97.19.5.42.85.79 1.22.37.37.72.6 1.22.79.37.14.94.31 1.97.36 1.23.06 1.58.07 4.73.07s3.5-.01 4.73-.07c1.03-.05 1.6-.22 1.97-.36.5-.19.85-.42 1.22-.79.37-.37.6-.72.79-1.22.14-.37.31-.94.36-1.97.06-1.23.07-1.58.07-4.73s-.01-3.5-.07-4.73c-.05-1.03-.22-1.6-.36-1.97a3.1 3.1 0 0 0-.79-1.22 3.1 3.1 0 0 0-1.22-.79c-.37-.14-.94-.31-1.97-.36C15.5 4.01 15.15 4 12 4Zm0 3.05a4.95 4.95 0 1 1 0 9.9 4.95 4.95 0 0 1 0-9.9Zm0 1.8a3.15 3.15 0 1 0 0 6.3 3.15 3.15 0 0 0 0-6.3Zm5.15-1.99a1.16 1.16 0 1 1-2.31 0 1.16 1.16 0 0 1 2.31 0Z"/></svg>
+      Sneha
+    </a>
+  </div>
+</section>
+
+<footer data-i18n="footerNote">Made with love for our families and friends.</footer>
+
+<script src="i18n.js"></script>
+<script src="gate.js"></script>
+<script src="favorites.js"></script>
+<script type="module" src="home.js"></script>
+</body>
+</html>

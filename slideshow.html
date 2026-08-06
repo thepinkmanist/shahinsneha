@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Slideshow — Shahin &amp; Sneha</title>
+<link rel="stylesheet" href="style.css">
+<style>body{background:#0f0e0a;}</style>
+</head>
+<body>
+
+<div class="lightbox" id="lightbox" style="position:fixed;">
+  <div class="lightbox__counter" id="lightboxCounter"></div>
+  <div class="lightbox__bar">
+    <button class="icon-btn" id="slideshowBtn" data-i18n-attr="title:slideshow" title="Slideshow">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <a class="icon-btn" id="downloadBtn" download data-i18n-attr="title:download" title="Download this photo">&#8681;</a>
+    <a class="icon-btn" id="closeLightbox" href="index.html" data-i18n-attr="title:close" title="Close">&#10005;</a>
+  </div>
+  <button class="lightbox__nav lightbox__prev" id="prevBtn" data-i18n-attr="title:previous" title="Previous">&#10094;</button>
+  <img id="lightboxImg" alt="">
+  <button class="lightbox__nav lightbox__next" id="nextBtn" data-i18n-attr="title:next" title="Next">&#10095;</button>
+</div>
+
+<script src="i18n.js"></script>
+<script src="gate.js"></script>
+<script type="module" src="slideshow.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>My Photos — Shahin &amp; Sneha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="topbar glass">
+  <a class="back-link" href="index.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    <span data-i18n="backHome">Back to home</span>
+  </a>
+</div>
+
+<header class="gallery-header glass">
+  <h1 class="gallery-header__title" data-i18n="myPhotos">My photos</h1>
+  <p class="gallery-header__count" id="photoCount"></p>
+</header>
+
+<div class="gallery-toolbar glass" id="toolbar">
+  <button class="action-btn" id="downloadSelectedBtn" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+    <span data-i18n="downloadSelected">Download my starred photos</span>
+  </button>
+  <button class="action-btn secondary" id="clearAllBtn" type="button" data-i18n="clearSelections">Clear all</button>
+  <p class="progress-note" id="progressNote"></p>
+</div>
+
+<main id="favMain">
+  <p class="favorites-empty hidden" id="emptyState">
+    <strong data-i18n="favoritesEmptyTitle">No starred photos yet</strong><br><br>
+    <span data-i18n="favoritesEmptyBody">Browse the galleries and tap the star on any photo you love. It'll be saved here — even if you close the browser and come back later.</span>
+  </p>
+  <div id="favGroups"></div>
+</main>
+
+<footer data-i18n="footerNote">Made with love for our families and friends.</footer>
+
+<!-- Lightbox -->
+<div class="lightbox hidden" id="lightbox">
+  <div class="lightbox__counter" id="lightboxCounter"></div>
+  <div class="lightbox__bar">
+    <button class="icon-btn" id="slideshowBtn" data-i18n-attr="title:slideshow" title="Slideshow">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="icon-btn star-btn" id="starBtn" data-i18n-attr="title:unstar" title="Remove star">
+      <svg viewBox="0 0 24 24"><path d="M12 2.5l3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.8 5.6 21.8l1.6-7.1-5.4-4.9 7.2-.7z"/></svg>
+    </button>
+    <button class="icon-btn" id="shareBtn" data-i18n-attr="title:share" title="Share this photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+    </button>
+    <a class="icon-btn" id="downloadBtn" download data-i18n-attr="title:download" title="Download this photo">&#8681;</a>
+    <button class="icon-btn" id="closeLightbox" data-i18n-attr="title:close" title="Close">&#10005;</button>
+  </div>
+  <button class="lightbox__nav lightbox__prev" id="prevBtn" data-i18n-attr="title:previous" title="Previous">&#10094;</button>
+  <img id="lightboxImg" alt="">
+  <button class="lightbox__nav lightbox__next" id="nextBtn" data-i18n-attr="title:next" title="Next">&#10095;</button>
+</div>
+
+<script src="i18n.js"></script>
+<script src="gate.js"></script>
+<script src="favorites.js"></script>
+<script type="module" src="favorites-page.js"></script>
+</body>
+</html>
