@@ -32,10 +32,16 @@
     <p class="hero__eyebrow" data-i18n="eyebrow">Our Wedding</p>
     <h1 class="hero__names" data-i18n="siteTitle">Shahin &amp; Sneha</h1>
     <p class="hero__tagline" data-i18n="tagline">A private gallery for our family and friends.</p>
-    <button class="action-btn" id="shareGalleryBtn" type="button" style="margin-top:1.3rem;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
-      <span data-i18n="shareGallery">Share this gallery</span>
-    </button>
+    <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.3rem;">
+      <button class="action-btn" id="shareGalleryBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+        <span data-i18n="shareGallery">Share this gallery</span>
+      </button>
+      <button class="action-btn secondary" id="openFaceSearchBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span data-i18n="findFaces">Find someone in the photos</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -52,15 +58,6 @@
 <section class="events">
   <h2 data-i18n="eventsHeading">The Celebrations</h2>
   <div class="event-grid">
-
-    <a class="event-card glass" href="prewedding.html">
-      <div class="event-card__photo"><img id="coverPrewedding" alt="" loading="lazy"></div>
-      <div class="event-card__body">
-        <p class="event-card__date" data-i18n="preweddingDate">1 May 2026</p>
-        <h3 class="event-card__title" data-i18n="preweddingTitle">Pre-Wedding Photoshoot</h3>
-        <span class="event-card__cta" data-i18n="viewGallery">View gallery →</span>
-      </div>
-    </a>
 
     <a class="event-card glass" href="registration.html">
       <div class="event-card__photo"><img id="coverRegistration" alt="" loading="lazy"></div>
@@ -85,6 +82,15 @@
       <div class="event-card__body">
         <p class="event-card__date" data-i18n="receptionTwoDate">17 May 2026</p>
         <h3 class="event-card__title" data-i18n="receptionTwoTitle">Reception — Bride's Side</h3>
+        <span class="event-card__cta" data-i18n="viewGallery">View gallery →</span>
+      </div>
+    </a>
+
+    <a class="event-card glass" href="prewedding.html">
+      <div class="event-card__photo"><img id="coverPrewedding" alt="" loading="lazy"></div>
+      <div class="event-card__body">
+        <p class="event-card__date" data-i18n="preweddingDate">1 May 2026</p>
+        <h3 class="event-card__title" data-i18n="preweddingTitle">Pre-Wedding Photoshoot</h3>
         <span class="event-card__cta" data-i18n="viewGallery">View gallery →</span>
       </div>
     </a>
@@ -133,11 +139,36 @@
     <span data-i18n="downloadAllEvents">Download every photo (all events)</span>
   </button>
   <p class="progress-note" id="progressNote"></p>
+  <a class="text-link-btn" href="raw.html" style="display:inline-block;margin-top:0.3rem;" data-i18n="viewRawPhotos">View all RAW photos</a>
 </footer>
+
+<!-- Face search modal -->
+<div class="modal hidden" id="faceModal">
+  <div class="modal__card">
+    <button class="modal__close" id="closeFaceModal">&#10005;</button>
+    <h2 data-i18n="findFaces">Find someone in the photos</h2>
+    <p data-i18n="findFacesBody">Upload one or more clear, front-facing selfies. Everything runs on this device — nothing is uploaded anywhere.</p>
+    <div class="selfie-list" id="selfieList"></div>
+    <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;">
+      <label class="upload-label" id="uploadLabel">
+        <span data-i18n="addAnotherSelfie">Add a selfie</span>
+        <input type="file" accept="image/*" id="selfieInput" multiple>
+      </label>
+      <label class="upload-label" id="cameraLabel">
+        <span data-i18n="takePhoto">Take a photo</span>
+        <input type="file" accept="image/*" capture="user" id="cameraInput">
+      </label>
+    </div>
+    <button class="action-btn" id="searchFacesBtn" type="button" data-i18n="searchFaces">Search photos</button>
+    <div class="status-line" id="faceStatus"></div>
+  </div>
+</div>
 
 <script src="i18n.js"></script>
 <script src="gate.js"></script>
 <script src="favorites.js"></script>
 <script type="module" src="home.js"></script>
+<script src="vendor/face-api.min.js"></script>
+<script type="module" src="facesearch.js"></script>
 </body>
 </html>

@@ -39,18 +39,23 @@
 </header>
 
 <div class="gallery-toolbar glass">
-  <button class="action-btn" id="downloadAllBtn" type="button">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
-    <span data-i18n="downloadAll">Download all</span>
-  </button>
-  <p class="progress-note" id="progressNote"></p>
+  <a class="action-btn" href="slideshow.html?event=prewedding">
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <span data-i18n="slideshow">Slideshow</span>
+  </a>
 </div>
 
 <main>
   <div class="grid" id="grid"></div>
 </main>
 
-<footer data-i18n="footerNote">Made with love for our families and friends.</footer>
+<footer>
+  <p data-i18n="footerNote">Made with love for our families and friends.</p>
+  <button class="text-link-btn" id="downloadAllBtn" type="button">
+    <span data-i18n="downloadAll">Download all</span>
+  </button>
+  <p class="progress-note" id="progressNote"></p>
+</footer>
 
 <!-- Lightbox -->
 <div class="lightbox hidden" id="lightbox">

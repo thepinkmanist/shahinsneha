@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>RAW Photos — Shahin &amp; Sneha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="topbar glass">
+  <a class="back-link" href="index.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    <span data-i18n="backHome">Back to home</span>
+  </a>
+</div>
+
+<header class="simple-header glass">
+  <h1 class="simple-header__title" data-i18n="rawPhotosTitle">RAW Photos</h1>
+</header>
+
+<div class="gate-card glass" id="rawGate" style="max-width:420px;margin:1.5rem auto;text-align:center;">
+  <h2 data-i18n="rawPasswordTitle">Enter the password to continue</h2>
+  <p data-i18n="rawPasswordBody">This section is separately locked, even if you already got past the main gate.</p>
+  <input type="text" id="rawPasswordInput" data-i18n-attr="placeholder:passwordPlaceholder" placeholder="Secret word…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+  <p class="gate-error hidden" id="rawPasswordError" data-i18n="rawPasswordError">That's not it — try again.</p>
+  <button class="action-btn" id="rawPasswordSubmit" type="button" data-i18n="passwordSubmit">Unlock</button>
+</div>
+
+<div class="hidden" id="rawContent" style="text-align:center; padding:2.5rem 1.25rem 4rem; max-width:600px; margin:0 auto;">
+  <p style="font-size:1.1rem; color:var(--muted);" data-i18n="rawComingSoon">The full RAW photo collection isn't uploaded yet — check back here later, this page will list them once they're ready.</p>
+</div>
+
+<footer data-i18n="footerNote">Made with love for our families and friends.</footer>
+
+<script src="i18n.js"></script>
+<script src="gate.js"></script>
+<script src="raw.js"></script>
+</body>
+</html>

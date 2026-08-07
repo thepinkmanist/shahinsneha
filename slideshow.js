@@ -1,13 +1,17 @@
 /* ============================================================
-   Wedding Gallery — combined "all photos" slideshow
-   Loads every event's manifest, sorted chronologically end-to-end
-   (registration, then reception1, then reception2), and starts
-   autoplaying immediately at 5 seconds per photo.
+   Wedding Gallery — slideshow
+   With no ?event= in the URL, plays every photo from every event,
+   chronologically. With ?event=<slug>, plays just that one event's
+   own photos (linked from that event's gallery page). Either way,
+   autoplays immediately at 5 seconds per photo.
    ============================================================ */
 
 import { attachZoom } from "./zoomable.js";
 
-const ALL_SLUGS = ["prewedding", "registration", "reception1", "reception2"];
+const requestedEvent = new URLSearchParams(location.search).get("event");
+const ALL_SLUGS = requestedEvent
+  ? [requestedEvent]
+  : ["prewedding", "registration", "reception1", "reception2"];
 
 const el = {
   lightboxImg: document.getElementById("lightboxImg"),
