@@ -88,6 +88,12 @@ const translations = {
     rawPasswordBody: "This section is separately locked, even if you already got past the main gate.",
     rawPasswordError: "That's not it — try again.",
     rawComingSoon: "The full RAW photo collection isn't uploaded yet — check back here later, this page will list them once they're ready.",
+    rawHint: "Hint: two letters — think initials.",
+    forgotPassword: "Forgot password?",
+    forgotPasswordBody: "Enter the phone number you shared with us and we'll show it to you.",
+    forgotPhoneError: "That number isn't recognized.",
+    forgotPhoneReveal: "Your password is: {password}",
+    checkPhone: "Check",
   },
   ml: {
     siteTitle: "ഷാഹിൻ & സ്നേഹ",

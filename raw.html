@@ -29,8 +29,19 @@
   <h2 data-i18n="rawPasswordTitle">Enter the password to continue</h2>
   <p data-i18n="rawPasswordBody">This section is separately locked, even if you already got past the main gate.</p>
   <input type="text" id="rawPasswordInput" data-i18n-attr="placeholder:passwordPlaceholder" placeholder="Secret word…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+  <p class="status-line" id="rawHint" data-i18n="rawHint" style="margin-top:-0.4rem;">Hint: two letters — think initials.</p>
   <p class="gate-error hidden" id="rawPasswordError" data-i18n="rawPasswordError">That's not it — try again.</p>
   <button class="action-btn" id="rawPasswordSubmit" type="button" data-i18n="passwordSubmit">Unlock</button>
+
+  <button type="button" class="text-link-btn hidden" id="forgotPasswordBtn" style="display:block;margin:1rem auto 0;" data-i18n="forgotPassword">Forgot password?</button>
+
+  <div class="hidden" id="forgotPasswordPanel" style="margin-top:1rem;">
+    <p data-i18n="forgotPasswordBody">Enter the phone number you shared with us and we'll show it to you.</p>
+    <input type="tel" id="forgotPhoneInput" data-i18n-attr="placeholder:gatePhonePlaceholder" placeholder="Phone number" autocomplete="tel">
+    <p class="gate-error hidden" id="forgotPhoneError" data-i18n="forgotPhoneError">That number isn't recognized.</p>
+    <p class="status-line hidden" id="forgotPhoneReveal"></p>
+    <button type="button" class="action-btn secondary" id="forgotPhoneSubmit" data-i18n="checkPhone">Check</button>
+  </div>
 </div>
 
 <div class="hidden" id="rawContent" style="text-align:center; padding:2.5rem 1.25rem 4rem; max-width:600px; margin:0 auto;">
