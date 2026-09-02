@@ -1,19 +1,28 @@
 /* ============================================================
-   Wedding Gallery — RAW photos placeholder
+   Wedding Gallery — RAW photos gate
    A separate password checkpoint (its own word, different from the
-   main site gate) specifically for the RAW photo section, since it's
-   meant to be more restricted than the regular galleries. Unlike the
-   main site gate, this one is NOT remembered — it asks again every
-   time this page is visited. There's nothing to show yet — this just
-   proves the gate works, ready for the real RAW gallery to be dropped
-   in later.
+   main site gate) shared by raw.html and every raw-gallery.html
+   category page, since RAW is meant to be more restricted than the
+   regular galleries. Once entered correctly, it's cached for 6 hours
+   (not tied to the tab or browser session) — after that it asks again.
    ============================================================ */
 
 const RAW_PASSWORD = "ss";
 const RECOVERY_PHONES = ["7356765614", "7559953372"];
 const ATTEMPTS_BEFORE_FORGOT = 4;
+const RAW_CACHE_KEY = "wedding-raw-verified-until";
+const RAW_CACHE_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 let failedAttempts = 0;
+
+function isRawVerified() {
+  const until = Number(localStorage.getItem(RAW_CACHE_KEY) || 0);
+  return Date.now() < until;
+}
+
+function markRawVerified() {
+  localStorage.setItem(RAW_CACHE_KEY, String(Date.now() + RAW_CACHE_MS));
+}
 
 function normalize(v) {
   return v.trim().toLowerCase().replace(/[\s\-,]/g, "");
@@ -32,6 +41,7 @@ function submit() {
   const input = document.getElementById("rawPasswordInput");
   const error = document.getElementById("rawPasswordError");
   if (normalize(input.value) === RAW_PASSWORD) {
+    markRawVerified();
     showContent();
     return;
   }
@@ -62,6 +72,11 @@ function checkPhone() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (isRawVerified()) {
+    showContent();
+    return;
+  }
+
   document.getElementById("rawPasswordSubmit").addEventListener("click", submit);
   document.getElementById("rawPasswordInput").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submit();
