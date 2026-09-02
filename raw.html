@@ -45,6 +45,12 @@
 </div>
 
 <div class="hidden" id="rawContent" style="text-align:center; padding:2.5rem 1.25rem 4rem; max-width:1100px; margin:0 auto;">
+  <div style="margin-bottom:1.5rem;">
+    <button class="action-btn secondary" id="openRawFaceSearchBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span data-i18n="findFaces">Find someone in the photos</span>
+    </button>
+  </div>
   <div class="event-grid">
     <a class="event-card glass" href="raw-gallery.html?cat=court-wedding">
       <div class="event-card__photo"><img src="photos/covers/Registration-cover.png" alt=""></div>
@@ -67,8 +73,32 @@
 
 <footer data-i18n="footerNote">Made with love for our families and friends.</footer>
 
+<!-- RAW face search modal -->
+<div class="modal hidden" id="rawFaceModal">
+  <div class="modal__card">
+    <button class="modal__close" id="closeRawFaceModal">&#10005;</button>
+    <h2 data-i18n="findFaces">Find someone in the photos</h2>
+    <p data-i18n="findFacesBody">Upload one or more clear, front-facing selfies. Everything runs on this device — nothing is uploaded anywhere.</p>
+    <div class="selfie-list" id="rawSelfieList"></div>
+    <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;">
+      <label class="upload-label" id="rawUploadLabel">
+        <span data-i18n="addAnotherSelfie">Add a selfie</span>
+        <input type="file" accept="image/*" id="rawSelfieInput" multiple>
+      </label>
+      <label class="upload-label" id="rawCameraLabel">
+        <span data-i18n="takePhoto">Take a photo</span>
+        <input type="file" accept="image/*" capture="user" id="rawCameraInput">
+      </label>
+    </div>
+    <button class="action-btn" id="searchRawFacesBtn" type="button" data-i18n="searchFaces">Search photos</button>
+    <div class="status-line" id="rawFaceStatus"></div>
+  </div>
+</div>
+
 <script src="i18n.js"></script>
 <script src="gate.js"></script>
 <script src="raw.js"></script>
+<script src="vendor/face-api.min.js"></script>
+<script type="module" src="raw-facesearch.js"></script>
 </body>
 </html>

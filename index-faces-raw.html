@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Build RAW face search index — run this once</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ivory:#f7f2e9; --ink:#23301c; --forest:#3e5641; --forest-deep:#2b3d2e; --gold:#a9823c; --muted:#6f6a5c; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ivory); color:var(--ink); font-family:"Inter",-apple-system,sans-serif; line-height:1.55; }
+  .wrap { max-width:640px; margin:0 auto; padding:3rem 1.25rem 5rem; }
+  h1 { font-family:"Fraunces",Georgia,serif; font-weight:600; color:var(--forest-deep); font-size:1.8rem; margin:0 0 0.4rem; }
+  .lede { color:var(--muted); margin:0 0 2rem; }
+  .card { background:#fff; border:1px solid rgba(169,130,60,0.22); border-radius:14px; padding:1.4rem 1.5rem; margin-bottom:1.1rem; }
+  .card h2 { font-size:1.05rem; margin:0 0 0.5rem; color:var(--forest-deep); }
+  .progress-track { background:#eee; border-radius:999px; height:10px; overflow:hidden; margin-top:0.6rem; }
+  .progress-fill { background:var(--gold); height:100%; width:0%; transition:width 0.15s ease; }
+  .status { font-size:0.85rem; color:var(--muted); margin-top:0.5rem; }
+  .btn { display:inline-block; background:var(--forest); color:#fff; border:none; padding:0.75rem 1.5rem; border-radius:999px; font-size:1rem; font-weight:600; cursor:pointer; }
+  .btn:hover { background:var(--forest-deep); }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .btn.secondary { background:transparent; color:var(--forest-deep); border:1px solid var(--forest); }
+  .done-badge { color:var(--forest); font-weight:700; }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Build RAW face search index</h1>
+  <p class="lede">
+    Same tool as the main gallery's face index, pointed at the RAW photo
+    categories instead. Run this once (from this page, in a normal browser
+    tab — not automation) to let visitors search "find someone in the
+    photos" inside the RAW section. Everything happens on this device;
+    nothing is uploaded anywhere. This is full-resolution RAW photos across
+    four categories (1455 + 957 + 909 + 287 = 3608 photos), so it will take
+    considerably longer than the main gallery's index did — likely a few
+    hours. Leave the tab open and focused the whole time; if the tab goes to
+    sleep or the laptop locks, the browser will throttle or pause it. When
+    each category finishes, its file downloads automatically — drop all
+    four into the <code>data/</code> folder in this project and push.
+  </p>
+
+  <div class="card">
+    <h2>Court Wedding</h2>
+    <div class="progress-track"><div class="progress-fill" id="fill-court-wedding"></div></div>
+    <p class="status" id="status-court-wedding">Waiting to start…</p>
+  </div>
+  <div class="card">
+    <h2>Groom Reception</h2>
+    <div class="progress-track"><div class="progress-fill" id="fill-groom-reception"></div></div>
+    <p class="status" id="status-groom-reception">Waiting to start…</p>
+  </div>
+  <div class="card">
+    <h2>Bride Reception</h2>
+    <div class="progress-track"><div class="progress-fill" id="fill-bride-reception"></div></div>
+    <p class="status" id="status-bride-reception">Waiting to start…</p>
+  </div>
+  <div class="card">
+    <h2>Pre-Wedding</h2>
+    <div class="progress-track"><div class="progress-fill" id="fill-pre-wedding"></div></div>
+    <p class="status" id="status-pre-wedding">Waiting to start…</p>
+  </div>
+
+  <button class="btn" id="startBtn" type="button">Start building the index</button>
+  <p class="status" id="overallStatus"></p>
+</div>
+
+<script src="vendor/face-api.min.js"></script>
+<script>
+const CATEGORIES = ["court-wedding", "groom-reception", "bride-reception", "pre-wedding"];
+let modelsReady = false;
+
+async function ensureModels() {
+  if (modelsReady) return;
+  document.getElementById("overallStatus").textContent = "Loading face recognition models…";
+  await faceapi.nets.ssdMobilenetv1.loadFromUri("models");
+  await faceapi.nets.tinyFaceDetector.loadFromUri("models");
+  await faceapi.nets.faceLandmark68Net.loadFromUri("models");
+  await faceapi.nets.faceRecognitionNet.loadFromUri("models");
+  modelsReady = true;
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("image load failed: " + src));
+    img.src = src;
+  });
+}
+
+function downloadJSON(filename, data) {
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+async function indexCategory(slug) {
+  const fill = document.getElementById(`fill-${slug}`);
+  const status = document.getElementById(`status-${slug}`);
+
+  const res = await fetch(`data/raw-${slug}.json`);
+  const list = await res.json();
+  const out = [];
+
+  for (let i = 0; i < list.length; i++) {
+    const photo = list[i];
+    try {
+      const img = await loadImage(`photos/RAW/${slug}/full/${photo.file}`);
+      let detections = await faceapi
+        .detectAllFaces(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.25 }))
+        .withFaceLandmarks()
+        .withFaceDescriptors();
+
+      if (!detections.length) {
+        detections = await faceapi
+          .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.2 }))
+          .withFaceLandmarks()
+          .withFaceDescriptors();
+      }
+
+      if (detections.length) {
+        out.push({ file: photo.file, descriptors: detections.map((d) => Array.from(d.descriptor)) });
+      }
+    } catch (err) {
+      // skip unreadable photo, keep going
+    }
+    const pct = Math.round(((i + 1) / list.length) * 100);
+    fill.style.width = pct + "%";
+    status.textContent = `${i + 1} / ${list.length} photos — ${out.length} with a face found`;
+  }
+
+  status.innerHTML = `<span class="done-badge">Done</span> — ${out.length} of ${list.length} photos have a face`;
+  downloadJSON(`raw-${slug}-faces.json`, out);
+}
+
+document.getElementById("startBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("startBtn");
+  btn.disabled = true;
+  btn.textContent = "Working…";
+  await ensureModels();
+  document.getElementById("overallStatus").textContent = "";
+
+  for (const slug of CATEGORIES) {
+    await indexCategory(slug);
+  }
+
+  document.getElementById("overallStatus").innerHTML =
+    "<strong>All done.</strong> Check your Downloads folder for 4 files (raw-court-wedding-faces.json, raw-groom-reception-faces.json, raw-bride-reception-faces.json, raw-pre-wedding-faces.json) — move them into this project's <code>data/</code> folder, then commit and push.";
+  btn.textContent = "Finished";
+});
+</script>
+</body>
+</html>
