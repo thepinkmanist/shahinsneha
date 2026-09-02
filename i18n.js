@@ -26,6 +26,7 @@ const translations = {
     followUs: "Follow us",
     footerNote: "Made with love for our families and friends.",
     backHome: "Back to home",
+    backRaw: "Back to RAW Photos",
     loading: "Loading photos…",
     emptyState: "No photos here yet.",
     close: "Close",
