@@ -4,10 +4,15 @@
    localStorage — no network needed to know what's starred — and
    renders it grouped by event, with a combined lightbox and a
    single zip download across every event.
+   This page is NOT behind the RAW "ss" gate, so RAW-starred photos
+   are deliberately filtered out here — they only ever surface back
+   inside raw.html's own "My starred photos" view (raw-favorites.js).
    ============================================================ */
 
 import { zipAndDownload } from "./zip.js";
 import { attachZoom } from "./zoomable.js";
+
+const RAW_SLUGS = new Set(["court-wedding", "groom-reception", "bride-reception", "pre-wedding"]);
 
 const EVENT_TITLES = {
   prewedding: "preweddingTitle",
@@ -45,7 +50,7 @@ render();
 wireEvents();
 
 function render() {
-  flatList = favoritesList();
+  flatList = favoritesList().filter((item) => !RAW_SLUGS.has(item.slug));
   el.count.textContent = t("photoCount", { n: flatList.length });
 
   el.groups.innerHTML = "";

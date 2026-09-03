@@ -40,6 +40,7 @@ const translations = {
     share: "Share this photo",
     shareFallback: "Photo opened in a new tab — save it, then share from WhatsApp or Instagram.",
     myPhotos: "My photos",
+    myStarredPhotos: "My starred photos",
     favoritesTitle: "Starred photos",
     starredNav: "Starred",
     downloadAll: "Download all",

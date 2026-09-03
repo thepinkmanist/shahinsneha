@@ -45,10 +45,14 @@
 </div>
 
 <div class="hidden" id="rawContent" style="text-align:center; padding:2.5rem 1.25rem 4rem; max-width:1100px; margin:0 auto;">
-  <div style="margin-bottom:1.5rem;">
+  <div style="margin-bottom:1.5rem;display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;">
     <button class="action-btn secondary" id="openRawFaceSearchBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <span data-i18n="findFaces">Find someone in the photos</span>
+    </button>
+    <button class="action-btn secondary" id="openRawStarredBtn" type="button">
+      <svg viewBox="0 0 24 24"><path d="M12 2.5l3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.8 5.6 21.8l1.6-7.1-5.4-4.9 7.2-.7z"/></svg>
+      <span data-i18n="myStarredPhotos">My starred photos</span>
     </button>
   </div>
   <div class="event-grid">
@@ -98,6 +102,8 @@
 <script src="i18n.js"></script>
 <script src="gate.js"></script>
 <script src="raw.js"></script>
+<script src="favorites.js"></script>
+<script type="module" src="raw-favorites.js"></script>
 <script src="vendor/face-api.min.js"></script>
 <script type="module" src="raw-facesearch.js"></script>
 </body>

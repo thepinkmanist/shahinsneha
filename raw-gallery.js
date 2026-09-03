@@ -3,8 +3,13 @@
    One page (?cat=<slug>) for all four RAW categories. Sits behind
    the same password gate as raw.html (raw.js handles that — this
    script only builds the grid/lightbox once the gate is unlocked).
-   No star/share/face-search here, just browse, slideshow, and
-   download (single photo or the whole category as a zip).
+   Browse, star, slideshow, and download (single photo or the whole
+   category as a zip). Starring uses the same favorites.js cart as
+   the main gallery, keyed by the RAW category slug — which never
+   collides with a main-gallery slug — but favorites-page.js filters
+   RAW entries out of the public "My photos" page, so starred RAW
+   photos only ever surface back inside the gated RAW section
+   (raw.html's "My starred photos").
    ============================================================ */
 
 import { zipAndDownload } from "./zip.js";
@@ -35,6 +40,7 @@ const el = {
   downloadBtn: document.getElementById("downloadBtn"),
   counter: document.getElementById("lightboxCounter"),
   slideshowBtn: document.getElementById("slideshowBtn"),
+  starBtn: document.getElementById("starBtn"),
 };
 
 let photos = [];
@@ -79,15 +85,43 @@ function renderGrid() {
   photos.forEach((p, i) => {
     const card = document.createElement("div");
     card.className = "photo-card";
+
+    const openBtn = document.createElement("button");
+    openBtn.type = "button";
+    openBtn.style.cssText = "position:absolute;inset:0;border:none;background:none;padding:0;width:100%;height:100%;";
     const img = document.createElement("img");
     img.src = `photos/RAW/${cat}/thumb/${p.file}`;
     img.loading = "lazy";
     img.alt = "";
-    card.appendChild(img);
-    card.addEventListener("click", () => openLightbox(i));
+    openBtn.appendChild(img);
+    openBtn.addEventListener("click", () => openLightbox(i));
+
+    card.appendChild(openBtn);
+    card.appendChild(makeStarButton(p.file));
     frag.appendChild(card);
   });
   el.grid.appendChild(frag);
+}
+
+function makeStarButton(file) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "star-btn";
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 2.5l3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.8 5.6 21.8l1.6-7.1-5.4-4.9 7.2-.7z"/></svg>';
+  const sync = () => {
+    const active = isFavorite(cat, file);
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
+    btn.title = t(active ? "unstar" : "star");
+  };
+  sync();
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleFavorite(cat, file);
+    sync();
+  });
+  document.addEventListener("langchange", sync);
+  return btn;
 }
 
 function openLightbox(index) {
@@ -112,7 +146,17 @@ function showCurrent() {
   el.downloadBtn.href = src;
   el.downloadBtn.setAttribute("download", p.file);
   el.counter.textContent = t("photoOf", { current: currentIndex + 1, total: photos.length });
+  syncStarBtn();
   if (zoomCtl) zoomCtl.reset(false);
+}
+
+function syncStarBtn() {
+  if (!el.starBtn) return;
+  const p = photos[currentIndex];
+  const active = isFavorite(cat, p.file);
+  el.starBtn.classList.toggle("active", active);
+  el.starBtn.setAttribute("aria-pressed", active ? "true" : "false");
+  el.starBtn.title = t(active ? "unstar" : "star");
 }
 
 function startSlideshow() {
@@ -151,6 +195,14 @@ function wireEvents() {
   el.nextBtn.addEventListener("click", () => { stopSlideshow(); step(1); });
   el.slideshowBtn.addEventListener("click", () => (slideshowTimer ? stopSlideshow() : startSlideshow()));
   el.downloadAllBtn.addEventListener("click", downloadAll);
+  if (el.starBtn) {
+    el.starBtn.addEventListener("click", () => {
+      const p = photos[currentIndex];
+      toggleFavorite(cat, p.file);
+      syncStarBtn();
+      renderGrid();
+    });
+  }
   el.slideshowOpenBtn.addEventListener("click", () => {
     openLightbox(0);
     startSlideshow();
