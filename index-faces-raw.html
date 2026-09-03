@@ -15,14 +15,17 @@
   h1 { font-family:"Fraunces",Georgia,serif; font-weight:600; color:var(--forest-deep); font-size:1.8rem; margin:0 0 0.4rem; }
   .lede { color:var(--muted); margin:0 0 2rem; }
   .card { background:#fff; border:1px solid rgba(169,130,60,0.22); border-radius:14px; padding:1.4rem 1.5rem; margin-bottom:1.1rem; }
-  .card h2 { font-size:1.05rem; margin:0 0 0.5rem; color:var(--forest-deep); }
+  .card h2 { font-size:1.05rem; margin:0 0 0.5rem; color:var(--forest-deep); display:flex; justify-content:space-between; align-items:baseline; gap:0.5rem; }
+  .card h2 .pct { font-size:0.85rem; font-weight:600; color:var(--gold); font-variant-numeric:tabular-nums; }
   .progress-track { background:#eee; border-radius:999px; height:10px; overflow:hidden; margin-top:0.6rem; }
   .progress-fill { background:var(--gold); height:100%; width:0%; transition:width 0.15s ease; }
   .status { font-size:0.85rem; color:var(--muted); margin-top:0.5rem; }
+  .resume-note { font-size:0.8rem; color:var(--forest); margin-top:0.35rem; }
   .btn { display:inline-block; background:var(--forest); color:#fff; border:none; padding:0.75rem 1.5rem; border-radius:999px; font-size:1rem; font-weight:600; cursor:pointer; }
   .btn:hover { background:var(--forest-deep); }
   .btn:disabled { opacity:0.5; cursor:not-allowed; }
   .btn.secondary { background:transparent; color:var(--forest-deep); border:1px solid var(--forest); }
+  .btn.small { padding:0.35rem 0.9rem; font-size:0.8rem; margin-left:0.5rem; }
   .done-badge { color:var(--forest); font-weight:700; }
   .hidden { display:none !important; }
 </style>
@@ -38,41 +41,94 @@
     nothing is uploaded anywhere. This is full-resolution RAW photos across
     four categories (1455 + 957 + 909 + 287 = 3608 photos), so it will take
     considerably longer than the main gallery's index did — likely a few
-    hours. Leave the tab open and focused the whole time; if the tab goes to
-    sleep or the laptop locks, the browser will throttle or pause it. When
-    each category finishes, its file downloads automatically — drop all
-    four into the <code>data/</code> folder in this project and push.
+    hours. Leave the tab open and focused the whole time.
+  </p>
+  <p class="lede" style="margin-top:-1.4rem;">
+    Every photo is checked with <strong>both</strong> detectors and the
+    results are merged, so a group shot where one detector misses a face
+    still gets caught by the other — this is what fixes photos coming up
+    with no face found. Progress is also saved to this browser as it goes,
+    so if the tab crashes, the laptop sleeps, or you accidentally close it,
+    reopening this page will offer to pick back up instead of starting a
+    category over.
   </p>
 
   <div class="card">
-    <h2>Court Wedding</h2>
+    <h2><span>Court Wedding</span><span class="pct" id="pct-court-wedding"></span></h2>
     <div class="progress-track"><div class="progress-fill" id="fill-court-wedding"></div></div>
     <p class="status" id="status-court-wedding">Waiting to start…</p>
+    <p class="resume-note hidden" id="resume-court-wedding"></p>
   </div>
   <div class="card">
-    <h2>Groom Reception</h2>
+    <h2><span>Groom Reception</span><span class="pct" id="pct-groom-reception"></span></h2>
     <div class="progress-track"><div class="progress-fill" id="fill-groom-reception"></div></div>
     <p class="status" id="status-groom-reception">Waiting to start…</p>
+    <p class="resume-note hidden" id="resume-groom-reception"></p>
   </div>
   <div class="card">
-    <h2>Bride Reception</h2>
+    <h2><span>Bride Reception</span><span class="pct" id="pct-bride-reception"></span></h2>
     <div class="progress-track"><div class="progress-fill" id="fill-bride-reception"></div></div>
     <p class="status" id="status-bride-reception">Waiting to start…</p>
+    <p class="resume-note hidden" id="resume-bride-reception"></p>
   </div>
   <div class="card">
-    <h2>Pre-Wedding</h2>
+    <h2><span>Pre-Wedding</span><span class="pct" id="pct-pre-wedding"></span></h2>
     <div class="progress-track"><div class="progress-fill" id="fill-pre-wedding"></div></div>
     <p class="status" id="status-pre-wedding">Waiting to start…</p>
+    <p class="resume-note hidden" id="resume-pre-wedding"></p>
   </div>
 
   <button class="btn" id="startBtn" type="button">Start building the index</button>
+  <button class="btn secondary" id="resetBtn" type="button">Clear saved progress &amp; start fresh</button>
   <p class="status" id="overallStatus"></p>
 </div>
 
 <script src="vendor/face-api.min.js"></script>
 <script>
 const CATEGORIES = ["court-wedding", "groom-reception", "bride-reception", "pre-wedding"];
+const CHECKPOINT_EVERY = 15; // photos between localStorage saves
 let modelsReady = false;
+
+function progressKey(slug) {
+  return `raw-faces-progress-${slug}`;
+}
+
+function loadCheckpoint(slug) {
+  try {
+    const raw = localStorage.getItem(progressKey(slug));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed.nextIndex === "number" && Array.isArray(parsed.out)) return parsed;
+  } catch (err) {
+    console.warn("Could not read saved progress for", slug, err);
+  }
+  return null;
+}
+
+function saveCheckpoint(slug, nextIndex, out) {
+  try {
+    localStorage.setItem(progressKey(slug), JSON.stringify({ nextIndex, out }));
+  } catch (err) {
+    // localStorage full or unavailable — processing still continues in memory,
+    // it just won't be resumable from a crash past this point.
+    console.warn("Could not save progress for", slug, err);
+  }
+}
+
+function clearCheckpoint(slug) {
+  localStorage.removeItem(progressKey(slug));
+}
+
+function describeResumePoint(slug) {
+  const cp = loadCheckpoint(slug);
+  const note = document.getElementById(`resume-${slug}`);
+  if (cp && cp.nextIndex > 0) {
+    note.textContent = `Saved progress found: will resume from photo ${cp.nextIndex + 1}, ${cp.out.length} faces found so far.`;
+    note.classList.remove("hidden");
+  } else {
+    note.classList.add("hidden");
+  }
+}
 
 async function ensureModels() {
   if (modelsReady) return;
@@ -105,48 +161,99 @@ function downloadJSON(filename, data) {
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
+function boxArea(box) {
+  return Math.max(0, box.width) * Math.max(0, box.height);
+}
+
+function iou(boxA, boxB) {
+  const x1 = Math.max(boxA.x, boxB.x);
+  const y1 = Math.max(boxA.y, boxB.y);
+  const x2 = Math.min(boxA.x + boxA.width, boxB.x + boxB.width);
+  const y2 = Math.min(boxA.y + boxA.height, boxB.y + boxB.height);
+  const overlap = Math.max(0, x2 - x1) * Math.max(0, y2 - y1);
+  if (overlap <= 0) return 0;
+  const union = boxArea(boxA) + boxArea(boxB) - overlap;
+  return union > 0 ? overlap / union : 0;
+}
+
+// Always run both detectors and merge — a group shot where SSD only picks
+// up a couple of the faces still gets the rest caught by Tiny (and vice
+// versa), instead of Tiny only ever being tried when SSD found literally
+// nothing. Faces the two detectors agree on (high IOU) are kept once.
+async function detectFacesMerged(img) {
+  const [ssd, tiny] = await Promise.all([
+    faceapi
+      .detectAllFaces(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.2 }))
+      .withFaceLandmarks()
+      .withFaceDescriptors(),
+    faceapi
+      .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.15 }))
+      .withFaceLandmarks()
+      .withFaceDescriptors(),
+  ]);
+
+  const merged = [...ssd];
+  tiny.forEach((cand) => {
+    const overlapsExisting = merged.some((d) => iou(d.detection.box, cand.detection.box) > 0.3);
+    if (!overlapsExisting) merged.push(cand);
+  });
+  return merged;
+}
+
 async function indexCategory(slug) {
   const fill = document.getElementById(`fill-${slug}`);
+  const pctLabel = document.getElementById(`pct-${slug}`);
   const status = document.getElementById(`status-${slug}`);
+  const resumeNote = document.getElementById(`resume-${slug}`);
+  resumeNote.classList.add("hidden");
 
   const res = await fetch(`data/raw-${slug}.json`);
   const list = await res.json();
-  const out = [];
 
-  for (let i = 0; i < list.length; i++) {
+  const checkpoint = loadCheckpoint(slug);
+  let startIndex = 0;
+  let out = [];
+  if (checkpoint && checkpoint.nextIndex > 0 && checkpoint.nextIndex <= list.length) {
+    startIndex = checkpoint.nextIndex;
+    out = checkpoint.out;
+    status.textContent = `Resuming from photo ${startIndex + 1} / ${list.length} — ${out.length} with a face found so far`;
+  }
+
+  for (let i = startIndex; i < list.length; i++) {
     const photo = list[i];
     try {
       const img = await loadImage(`photos/RAW/${slug}/full/${photo.file}`);
-      let detections = await faceapi
-        .detectAllFaces(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.25 }))
-        .withFaceLandmarks()
-        .withFaceDescriptors();
-
-      if (!detections.length) {
-        detections = await faceapi
-          .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.2 }))
-          .withFaceLandmarks()
-          .withFaceDescriptors();
-      }
-
+      const detections = await detectFacesMerged(img);
       if (detections.length) {
         out.push({ file: photo.file, descriptors: detections.map((d) => Array.from(d.descriptor)) });
       }
     } catch (err) {
       // skip unreadable photo, keep going
     }
+
     const pct = Math.round(((i + 1) / list.length) * 100);
     fill.style.width = pct + "%";
+    pctLabel.textContent = pct + "%";
     status.textContent = `${i + 1} / ${list.length} photos — ${out.length} with a face found`;
+
+    if ((i + 1) % CHECKPOINT_EVERY === 0) {
+      saveCheckpoint(slug, i + 1, out);
+    }
+
+    // Explicit yield so the browser reliably gets a chance to paint and stay
+    // responsive between photos, even during the heaviest detection passes.
+    await new Promise((r) => setTimeout(r, 0));
   }
 
   status.innerHTML = `<span class="done-badge">Done</span> — ${out.length} of ${list.length} photos have a face`;
+  clearCheckpoint(slug);
   downloadJSON(`raw-${slug}-faces.json`, out);
 }
 
 document.getElementById("startBtn").addEventListener("click", async () => {
   const btn = document.getElementById("startBtn");
   btn.disabled = true;
+  document.getElementById("resetBtn").disabled = true;
   btn.textContent = "Working…";
   await ensureModels();
   document.getElementById("overallStatus").textContent = "";
@@ -158,7 +265,17 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   document.getElementById("overallStatus").innerHTML =
     "<strong>All done.</strong> Check your Downloads folder for 4 files (raw-court-wedding-faces.json, raw-groom-reception-faces.json, raw-bride-reception-faces.json, raw-pre-wedding-faces.json) — move them into this project's <code>data/</code> folder, then commit and push.";
   btn.textContent = "Finished";
+  document.getElementById("resetBtn").disabled = false;
 });
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("This clears all saved progress for every RAW category and the next run will start from photo 1. Continue?")) return;
+  CATEGORIES.forEach(clearCheckpoint);
+  CATEGORIES.forEach(describeResumePoint);
+  document.getElementById("overallStatus").textContent = "Saved progress cleared.";
+});
+
+CATEGORIES.forEach(describeResumePoint);
 </script>
 </body>
 </html>
