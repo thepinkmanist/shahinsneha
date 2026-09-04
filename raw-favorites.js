@@ -17,6 +17,20 @@ const CATEGORY_TITLES = {
   "pre-wedding": "Pre-Wedding",
 };
 
+function rawFavoritesCount() {
+  return favoritesList().filter((item) => RAW_SLUGS.has(item.slug)).length;
+}
+
+function syncRawFavoritesBadge() {
+  const n = rawFavoritesCount();
+  document.querySelectorAll("[data-raw-favorites-count]").forEach((el) => {
+    el.textContent = n;
+  });
+}
+
+syncRawFavoritesBadge();
+document.addEventListener("favoriteschange", syncRawFavoritesBadge);
+
 const openBtn = document.getElementById("openRawStarredBtn");
 if (openBtn) {
   injectUI();

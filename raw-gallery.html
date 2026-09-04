@@ -27,6 +27,11 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
     <span data-i18n="backRaw">Back to RAW Photos</span>
   </a>
+  <button class="fav-link" id="openRawStarredBtn" type="button" style="font:inherit;cursor:pointer;">
+    <svg viewBox="0 0 24 24"><path d="M12 2.5l3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.8 5.6 21.8l1.6-7.1-5.4-4.9 7.2-.7z"/></svg>
+    <span data-i18n="starredNav">Starred</span>
+    <span class="fav-link__count" data-raw-favorites-count>0</span>
+  </button>
 </div>
 
 <header class="simple-header glass">
@@ -97,5 +102,6 @@
 <script src="raw.js"></script>
 <script src="favorites.js"></script>
 <script type="module" src="raw-gallery.js"></script>
+<script type="module" src="raw-favorites.js"></script>
 </body>
 </html>
