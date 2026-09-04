@@ -11,6 +11,14 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<script>
+  // Runs before the gate markup below is even parsed, so an already-verified
+  // visitor never sees a flash of the password box while raw.js loads.
+  (function () {
+    var until = Number(localStorage.getItem("wedding-raw-verified-until") || 0);
+    if (Date.now() < until) document.write("<style>#rawGate{display:none!important}</style>");
+  })();
+</script>
 
 <div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
 
