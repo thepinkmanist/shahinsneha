@@ -3,9 +3,15 @@
    Persisted in localStorage so a visitor can star photos, close
    the tab, and come back later to finish and download them.
    Shape: { registration: ["file.jpg", ...], reception1: [...], reception2: [...] }
+   RAW category slugs share this same store (see raw-gallery.js /
+   raw-favorites.js), but the public "My photos" page deliberately
+   excludes them (favorites-page.js) since it isn't behind the RAW
+   gate — so the main site's nav badge excludes them here too, or
+   the number shown wouldn't match what that page actually lists.
    ============================================================ */
 
 const FAVORITES_KEY = "wedding-favorites";
+const RAW_SLUGS = new Set(["court-wedding", "groom-reception", "bride-reception", "pre-wedding"]);
 
 function readFavorites() {
   try {
@@ -41,7 +47,9 @@ function toggleFavorite(slug, file) {
 
 function favoritesCount() {
   const data = readFavorites();
-  return Object.values(data).reduce((sum, list) => sum + list.length, 0);
+  return Object.keys(data)
+    .filter((slug) => !RAW_SLUGS.has(slug))
+    .reduce((sum, slug) => sum + data[slug].length, 0);
 }
 
 // Returns a flat list of { slug, file } for every starred photo.
