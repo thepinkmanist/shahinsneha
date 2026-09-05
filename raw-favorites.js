@@ -41,6 +41,7 @@ if (openBtn) {
     groups: document.getElementById("rawStarredGroups"),
     empty: document.getElementById("rawStarredEmpty"),
     downloadAllBtn: document.getElementById("downloadStarredRawBtn"),
+    clearAllBtn: document.getElementById("clearStarredRawBtn"),
     progressNote: document.getElementById("rawStarredProgressNote"),
     closeBtn: document.getElementById("closeRawStarredView"),
     lightbox: document.getElementById("rawStarredLightbox"),
@@ -75,6 +76,7 @@ if (openBtn) {
     const hasAny = flatList.length > 0;
     el.empty.classList.toggle("hidden", hasAny);
     el.downloadAllBtn.classList.toggle("hidden", !hasAny);
+    el.clearAllBtn.classList.toggle("hidden", !hasAny);
 
     const grouped = {};
     flatList.forEach((item) => {
@@ -178,6 +180,15 @@ if (openBtn) {
     if (e.key === "ArrowRight") step(1);
   });
 
+  el.clearAllBtn.addEventListener("click", () => {
+    if (!flatList.length) return;
+    if (!confirm(t("clearSelections") + "?")) return;
+    const data = readFavorites();
+    RAW_SLUGS.forEach((slug) => delete data[slug]);
+    writeFavorites(data);
+    render();
+  });
+
   el.downloadAllBtn.addEventListener("click", async () => {
     if (!flatList.length) return;
     const items = flatList.map((item) => ({
@@ -210,6 +221,7 @@ function injectUI() {
         <span class="face-results-view__count" id="rawStarredCount"></span>
         <div style="display:flex;gap:0.5rem;align-items:center;">
           <button class="action-btn secondary hidden" id="downloadStarredRawBtn" type="button" data-i18n="downloadAll">Download all</button>
+          <button class="text-link-btn hidden" id="clearStarredRawBtn" type="button" data-i18n="clearSelections">Clear all</button>
           <button class="icon-btn icon-btn--dark" id="closeRawStarredView" type="button" data-i18n-attr="title:close" title="Close">&#10005;</button>
         </div>
       </div>
