@@ -1,0 +1,28 @@
+/* Android TV mode — see tv.js. Everything is scoped to html.tv. */
+html.tv body { font-size: 22px; cursor: none; }
+
+/* Big, unmistakable focus ring for the D-pad. */
+html.tv :focus { outline: none; }
+html.tv a:focus-visible, html.tv button:focus-visible, html.tv input:focus-visible,
+html.tv a:focus, html.tv button:focus, html.tv input:focus {
+  outline: 4px solid #b0813a;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 8px rgba(176,129,58,0.28), 0 12px 40px rgba(60,45,20,0.35);
+  transform: scale(1.04);
+  transition: transform .12s ease, box-shadow .12s ease;
+  z-index: 5;
+}
+html.tv .photo-card:focus-within { outline: 4px solid #b0813a; outline-offset: 3px; transform: scale(1.06); z-index: 5; }
+html.tv .photo-card button:focus { outline: none; box-shadow: none; transform: none; }
+
+/* Overscan-safe margins on a TV. */
+html.tv body { padding: 0 2.5vw; }
+
+/* Things that don't work (or make no sense) with only a remote. */
+html.tv #openFaceSearchBtn, html.tv #openRawFaceSearchBtn,
+html.tv #downloadEverythingBtn, html.tv #downloadAllBtn, html.tv #downloadSelectedBtn,
+html.tv #shareGalleryBtn, html.tv #shareBtn, html.tv #downloadBtn,
+html.tv #downloadStarredRawBtn, html.tv .lightbox__hint { display: none !important; }
+
+/* Lightbox controls: larger targets. */
+html.tv .lightbox__bar .icon-btn, html.tv .lightbox__nav { width: 72px; height: 72px; font-size: 1.8rem; }

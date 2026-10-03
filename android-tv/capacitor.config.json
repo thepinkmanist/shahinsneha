@@ -1,0 +1,12 @@
+{
+  "appId": "dev.workers.shahinsneha.tv",
+  "appName": "Shahin & Sneha",
+  "webDir": "www",
+  "server": {
+    "url": "https://gallery.shahinsneha.workers.dev/?tv=1",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
