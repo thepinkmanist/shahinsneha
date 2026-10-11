@@ -26,3 +26,6 @@ html.tv #downloadStarredRawBtn, html.tv .lightbox__hint { display: none !importa
 
 /* Lightbox controls: larger targets. */
 html.tv .lightbox__bar .icon-btn, html.tv .lightbox__nav { width: 72px; height: 72px; font-size: 1.8rem; }
+
+/* Starring is done from the viewer with the Up key; grid stars would just be extra focus stops. */
+html.tv .photo-card .star-btn { display: none !important; }

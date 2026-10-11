@@ -3,10 +3,11 @@
   "appName": "Shahin & Sneha",
   "webDir": "www",
   "server": {
-    "url": "https://gallery.shahinsneha.workers.dev/?tv=1",
+    "url": "https://gallery.shahinsneha.workers.dev/",
     "cleartext": false
   },
   "android": {
-    "allowMixedContent": false
+    "allowMixedContent": false,
+    "appendUserAgent": "ShahinSneha-TV"
   }
 }
