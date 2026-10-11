@@ -1,6 +1,6 @@
 # Shahin & Sneha — dedicated Android TV photo/video app (WORK IN PROGRESS)
 
-Status: skeleton only. NO Kotlin source written yet. NO APK built (user said: do not
+Status: skeleton + browser preview (tv-photo-app/preview/index.html, open via localhost:4173/tv-photo-app/preview/index.html). NO Kotlin source written yet. NO APK built (user said: do not
 build an APK until told). A code-only compile check (no APK) was OK'd in my plan but not run.
 
 ## Done

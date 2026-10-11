@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>TV app preview</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{--bg:#1c1a16;--card:#2a2620;--gold:#b0813a;--ivory:#fbf3e4;--forest:#3e5641}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Inter,system-ui,sans-serif;color:var(--ivory)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--bg);overflow:hidden}
+.f{outline:none;transition:transform .12s}
+.f:focus{transform:scale(1.06);box-shadow:inset 0 0 0 5px var(--gold),0 0 0 5px var(--gold);z-index:3}
+h1{font:600 52px Georgia,serif;margin:0}
+.head{display:flex;align-items:center;gap:20px;padding:40px 80px 10px}.head img{width:72px;height:72px}
+.grid{display:grid;gap:28px;padding:30px 80px}
+.tile{position:relative;height:250px;border-radius:24px;background:var(--card);overflow:hidden;cursor:pointer}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tile .t{position:absolute;left:0;right:0;bottom:0;padding:70px 24px 18px;font:600 34px Georgia,serif;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.tile .t small{display:block;font:400 22px Inter,sans-serif;opacity:.8;margin-top:4px}
+.tile.plain{display:flex;align-items:flex-end}.tile.plain .t{background:none}.tile.off{opacity:.5}
+.photos{grid-template-columns:repeat(6,1fr);gap:18px}.photos .tile{height:260px;border-radius:14px}.photos .tile .t{display:none}
+.viewer{position:absolute;inset:0;background:#000}.viewer img.main{width:100%;height:100%;object-fit:contain}
+.cap{position:absolute;left:50px;bottom:40px;font-size:30px;padding:14px 22px;background:rgba(0,0,0,.6);border-radius:12px;transition:opacity .4s}
+.badge{position:absolute;right:50px;top:40px;font-size:26px;padding:10px 20px;background:rgba(0,0,0,.6);border-radius:12px}
+.qr{position:absolute;right:50px;bottom:40px;background:#fff;color:#222;padding:22px 22px 14px;border-radius:20px;text-align:center;font-size:26px;width:340px}
+.qr svg{width:296px;height:296px;display:block}
+.hint{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:20px;opacity:.5}
+.vid{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#2c2a25,#000)}
+.vid .ctl{position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.7),transparent 25%,transparent 55%,rgba(0,0,0,.85));transition:opacity .3s}
+.top{position:absolute;left:70px;top:50px}.top b{font:600 44px Georgia,serif}.top div{font-size:24px;opacity:.8;margin-top:6px}
+.bot{position:absolute;left:70px;right:70px;bottom:50px}
+.seek{display:flex;align-items:center;gap:24px;font-size:26px;padding:8px 0}
+.bar{flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.25);position:relative}.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--gold);border-radius:7px}
+.seek.f:focus{transform:none;box-shadow:none}.seek.f:focus .bar{outline:4px solid var(--gold);outline-offset:6px}
+.btns{display:flex;gap:18px;justify-content:center;margin-top:26px}
+.btn{padding:18px 30px;border-radius:16px;background:rgba(255,255,255,.14);font-size:28px;cursor:pointer}
+.row{margin:0 80px 22px;padding:30px 36px;border-radius:20px;background:var(--card);font-size:34px;display:flex;justify-content:space-between}
+.over{position:absolute;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:9}
+.dlg{background:var(--card);padding:50px 60px;border-radius:28px;text-align:center;font-size:34px}.dlg p{margin:0 0 14px}.dlg small{display:block;opacity:.7;font-size:24px;margin-bottom:30px}
+.dlg .btn{display:inline-block;margin:0 12px;background:rgba(255,255,255,.18)}
+.help{position:fixed;left:10px;bottom:6px;font:13px sans-serif;color:#aaa;z-index:99}
+</style></head><body>
+<div id="stage"></div>
+<div class="help">Preview of the TV app layout · keys: arrows = D-pad, Enter = OK, Esc/Backspace = Back</div>
+<script>
+const SITE = "https://gallery.shahinsneha.workers.dev/", ROOT = "../../";
+const EVENTS = [
+  {k:"registration", t:"Registration", c:"Registration-cover.png"},
+  {k:"reception1", t:"Groom's Reception", c:"Reception-1-cover.png"},
+  {k:"reception2", t:"Bride's Reception", c:"Reception-2-cover.png"},
+  {k:"prewedding", t:"Pre-Wedding", c:"pre-wedding-cover.png"}];
+const RAW = [
+  {k:"court-wedding", t:"Court Wedding", c:"Registration-cover.png"},
+  {k:"groom-reception", t:"Groom Reception", c:"Reception-1-cover.png"},
+  {k:"bride-reception", t:"Bride Reception", c:"Reception-2-cover.png"},
+  {k:"pre-wedding", t:"Pre-Wedding", c:"pre-wedding-cover.png"}].map(e => ({...e, raw:1}));
+const VIDEOS = [
+  {t:"Highlight film", d:"7 min", p:1, total:420},
+  {t:"Registration — full video", d:"1 hr 45 min", p:1, total:6300},
+  {t:"Groom's reception", d:"20 min", p:2, total:1200},
+  {t:"Bride's reception", d:"20 min", p:2, total:1200}];
+const SPEEDS = [3,4,5,6,8,10,15,30], RATES = [1,1.1,1.25,1.5,1.75,2];
+
+const S = document.getElementById("stage"), stack = [];
+let cur = null, timers = [], active = null;
+const st = JSON.parse(localStorage.tvPrev || '{"secs":6,"shuffle":false,"idx":{}}');
+const save = () => localStorage.tvPrev = JSON.stringify(st);
+const cache = {};
+
+async function photos(e) {
+  const k = e.k + (e.raw ? "r" : "");
+  if (cache[k]) return cache[k];
+  const j = await (await fetch(ROOT + "data/" + (e.raw ? "raw-" : "") + e.k + ".json")).json();
+  return cache[k] = j.map(p => ({
+    e, file:p.file, at:p.takenAt,
+    th: e.raw ? `photos/RAW/${e.k}/thumb/${p.file}` : `photos/${e.k}/thumb/${p.thumb || p.file}`,
+    full: e.raw ? `photos/RAW/${e.k}/full/${p.file}` : `photos/${e.k}/full/${p.file}`}));
+}
+const fmtDate = s => s ? new Date(s).toLocaleDateString("en-GB", {day:"numeric", month:"long", year:"numeric"}) : "";
+const mmss = s => { s = Math.max(0, Math.floor(s)); const h = s/3600|0, m = (s%3600)/60|0, x = s%60;
+  return (h ? h + ":" + String(m).padStart(2,"0") : m) + ":" + String(x).padStart(2,"0"); };
+function clearT() { timers.forEach(t => { clearInterval(t); clearTimeout(t); }); timers = []; active = null; }
+function go(fn, push = true) { clearT(); if (push && cur) stack.push(cur); cur = fn; fn(); }
+function back() { clearT(); if (stack.length) { cur = stack.pop(); cur(); } }
+function el(h) { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; }
+function tile(t, sub, img, fn, off) {
+  const d = el(`<div class="tile f ${img ? "" : "plain"} ${off ? "off" : ""}" tabindex="0">${img ? `<img src="${img}">` : ""}<div class="t">${t}${sub ? `<small>${sub}</small>` : ""}</div></div>`);
+  d.onclick = fn; d.act = fn; return d;
+}
+function head(t) { return el(`<div class="head"><img src="../../branding/logo-mark-256.png"><h1>${t}</h1></div>`); }
+function focusFirst() { S.querySelector(".f")?.focus(); }
+function grid(cols) { return el(`<div class="grid" style="grid-template-columns:repeat(${cols},1fr)"></div>`); }
+
+function home() {
+  S.innerHTML = ""; S.append(head("Shahin &amp; Sneha"));
+  const g = grid(3);
+  EVENTS.forEach(e => g.append(tile(e.t, "", ROOT + "photos/covers/" + e.c, () => go(() => gallery(e)))));
+  g.append(tile("Play everything", "Slideshow of all photos", ROOT + "photos/covers/home-page-cover.png", () => go(() => viewer(null, 0, true))));
+  g.append(tile("Videos", "Highlights &amp; full videos", "", () => go(videos)));
+  g.append(tile("RAW photos", "Unedited photos", "", () => go(rawMenu)));
+  g.append(tile("Settings", "Slideshow speed &amp; more", "", () => go(settings)));
+  S.append(g); focusFirst();
+}
+function rawMenu() {
+  S.innerHTML = ""; S.append(head("RAW photos"));
+  const g = grid(3);
+  RAW.forEach(e => g.append(tile(e.t, "", ROOT + "photos/covers/" + e.c, () => go(() => gallery(e)))));
+  S.append(g); focusFirst();
+}
+async function gallery(e) {
+  S.innerHTML = ""; const list = await photos(e);
+  S.append(head(e.t + " · " + list.length + " photos"));
+  const g = el('<div class="grid photos"></div>');
+  list.slice(0, 60).forEach((p, i) => g.append(tile("", "", ROOT + p.th, () => go(() => viewer(list, i, false)))));
+  S.append(g);
+  const last = st.idx[e.k] || 0;
+  if (last > 0 && last < list.length) {
+    const f = g.children[Math.min(last, 59)];
+    promptBox("Continue where you left off?", `Photo ${last + 1} of ${list.length}`, () => f.focus(), focusFirst);
+  } else focusFirst();
+}
+function promptBox(msg, sub, yes, no) {
+  let n = 30;
+  const o = el(`<div class="over"><div class="dlg"><p>${msg}</p><small>${sub} · starting from the beginning in <b>${n}</b>s</small><span class="btn f" tabindex="0">Continue</span><span class="btn f" tabindex="0">Start over</span></div></div>`);
+  S.append(o);
+  const [b1, b2] = o.querySelectorAll(".btn"), b = o.querySelector("b");
+  let t;
+  const done = fn => { clearInterval(t); o.remove(); fn(); };
+  b1.act = () => done(yes); b2.act = () => done(no); b1.focus();
+  t = setInterval(() => { b.textContent = --n; if (n <= 0) done(no); }, 1000);
+  timers.push(t); o.back = () => done(no);
+}
+function viewer(list, i, all) {
+  S.innerHTML = "";
+  let order = [], pos = 0, playing = false, qr = false, tm, capT;
+  const shuf = a => { for (let x = a.length - 1; x > 0; x--) { const y = Math.random() * (x + 1) | 0; [a[x], a[y]] = [a[y], a[x]]; } };
+  const v = el('<div class="viewer"><img class="main"><div class="cap"></div><div class="badge" style="display:none"></div><div class="qr" style="display:none"></div><div class="hint">← → browse · OK QR code · ↓ slideshow · Back close</div></div>');
+  S.append(v);
+  const img = v.querySelector(".main"), cap = v.querySelector(".cap"), badge = v.querySelector(".badge"), q = v.querySelector(".qr");
+  function render() {
+    const p = list[order[pos]];
+    img.src = ROOT + p.full;
+    cap.textContent = `${p.e.t} · ${fmtDate(p.at)} · ${pos + 1} / ${list.length}`;
+    cap.style.opacity = 1; clearTimeout(capT); capT = setTimeout(() => cap.style.opacity = 0, 4000); timers.push(capT);
+    if (!all) { st.idx[p.e.k] = order[pos]; save(); }
+    if (qr) {
+      const c = qrcode(0, "M"); c.addData(SITE + "dl.html?f=" + encodeURIComponent(p.full)); c.make();
+      q.innerHTML = c.createSvgTag(8, 0) + '<div style="margin-top:8px">Scan to download this photo</div>';
+    }
+    badge.style.display = playing ? "block" : "none";
+    badge.textContent = "Slideshow · " + st.secs + "s" + (st.shuffle ? " · shuffle" : "");
+    new Image().src = ROOT + list[order[(pos + 1) % list.length]].full;
+  }
+  function loop() { clearInterval(tm); tm = setInterval(() => { pos = (pos + 1) % list.length; render(); }, st.secs * 1000); timers.push(tm); }
+  const step = d => { pos = (pos + d + list.length) % list.length; render(); if (playing) loop(); };
+  active = k => {
+    if (k === "left") step(-1);
+    else if (k === "right") step(1);
+    else if (k === "ok") { qr = !qr; q.style.display = qr ? "block" : "none"; render(); }
+    else if (k === "down") {
+      playing = !playing;
+      if (playing) {
+        if (st.shuffle) { const c = order[pos]; shuf(order); order.splice(order.indexOf(c), 1); order.unshift(c); pos = 0; }
+        loop();
+      } else clearInterval(tm);
+      render();
+    } else if (k === "back") { if (qr) { qr = false; q.style.display = "none"; } else back(); }
+  };
+  (async () => {
+    if (all) list = (await Promise.all(EVENTS.map(photos))).flat();
+    order = list.map((_, x) => x);
+    if (all) { shuf(order); playing = true; } else pos = i;
+    render(); if (playing) loop();
+  })();
+}
+function videos() {
+  S.innerHTML = ""; S.append(head("Videos"));
+  const g = grid(2);
+  VIDEOS.forEach((x, i) => g.append(tile(x.t, x.d + " · links coming soon", "", () => go(() => player(i)))));
+  S.append(g); focusFirst();
+}
+function player(i) {
+  S.innerHTML = "";
+  let t = 0, play = true, ri = 0, src = 0, vis = true, hideT, qr = false;
+  const total = VIDEOS[i].total;
+  const btn = (a, label) => `<span class="btn f" tabindex="0" data-a="${a}">${label}</span>`;
+  const v = el(`<div class="vid"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:.35">(video plays here — the preview has no real video)</div>
+    <div class="ctl"><div class="top"><b>${VIDEOS[i].t}</b><div class="srcl"></div></div>
+    <div class="bot"><div class="seek f" tabindex="0"><span class="cu"></span><div class="bar"><i></i></div><span>${mmss(total)}</span></div>
+    <div class="btns">${btn("prev","Prev")}${btn("-10","−10s")}${btn("pp","Pause")}${btn("+10","+10s")}${btn("next","Next")}${btn("spd","1.0x")}${btn("src","Source")}${btn("qr","QR")}</div></div></div>
+    <div class="qr" style="display:none;z-index:5"></div></div>`);
+  S.append(v);
+  const ctl = v.querySelector(".ctl"), bar = v.querySelector(".bar i"), cu = v.querySelector(".cu"), srcl = v.querySelector(".srcl"), qd = v.querySelector(".qr");
+  const upd = () => {
+    bar.style.width = (t / total * 100) + "%"; cu.textContent = mmss(t);
+    v.querySelector("[data-a=pp]").textContent = play ? "Pause" : "Play";
+    v.querySelector("[data-a=spd]").textContent = RATES[ri] + "x";
+    srcl.textContent = "Source: " + (src ? "Google Drive" : "Dropbox") + "  ·  priority " + VIDEOS[i].p;
+  };
+  const show = () => { vis = true; ctl.style.opacity = 1; clearTimeout(hideT); hideT = setTimeout(() => { if (play) { vis = false; ctl.style.opacity = 0; } }, 4000); timers.push(hideT); };
+  const act = a => {
+    if (a === "pp") play = !play;
+    else if (a === "-10") t = Math.max(0, t - 10);
+    else if (a === "+10") t = Math.min(total, t + 10);
+    else if (a === "spd") ri = (ri + 1) % RATES.length;
+    else if (a === "src") src ^= 1;
+    else if (a === "next") return go(() => player((i + 1) % 4), false);
+    else if (a === "prev") return go(() => player((i + 3) % 4), false);
+    else if (a === "qr") {
+      qr = !qr; qd.style.display = qr ? "block" : "none";
+      const c = qrcode(0, "M"); c.addData("https://www.dropbox.com/(video download link)"); c.make();
+      qd.innerHTML = c.createSvgTag(8, 0) + '<div style="margin-top:8px">Scan to download this video</div>';
+    }
+    upd(); show();
+  };
+  v.querySelectorAll(".btn").forEach(b => b.act = () => act(b.dataset.a));
+  timers.push(setInterval(() => { if (play) { t = Math.min(total, t + RATES[ri]); upd(); } }, 1000));
+  active = k => {
+    if (qr && (k === "ok" || k === "back")) { act("qr"); return; }
+    if (!vis) {
+      if (k === "ok") act("pp"); else if (k === "left") act("-10"); else if (k === "right") act("+10");
+      else if (k === "back") back(); else { show(); v.querySelector("[data-a=pp]").focus(); }
+      return;
+    }
+    show();
+    if (k === "back") { vis = false; ctl.style.opacity = 0; return; }
+    const f = document.activeElement;
+    if (f.classList.contains("seek") && (k === "left" || k === "right")) { act(k === "left" ? "-10" : "+10"); return; }
+    return "nav";
+  };
+  upd(); v.querySelector("[data-a=pp]").focus(); show();
+}
+function settings() {
+  S.innerHTML = ""; S.append(head("Settings"));
+  const box = el('<div style="margin-top:30px"></div>'); S.append(box);
+  const r1 = el('<div class="row f" tabindex="0"></div>'), r2 = el('<div class="row f" tabindex="0"></div>'),
+        r3 = el('<div class="row f" tabindex="0"><span>Clear saved places (continue prompts)</span><span>OK</span></div>');
+  const u = () => {
+    r1.innerHTML = `<span>Slideshow speed</span><span>‹ ${st.secs} seconds ›</span>`;
+    r2.innerHTML = `<span>Shuffle slideshow</span><span>${st.shuffle ? "On" : "Off"}</span>`; save();
+  };
+  r1.key = k => { const i = SPEEDS.indexOf(st.secs);
+    if (k === "left") st.secs = SPEEDS[Math.max(0, i - 1)]; else if (k === "right") st.secs = SPEEDS[Math.min(SPEEDS.length - 1, i + 1)]; else return "nav"; u(); };
+  r2.key = k => { if (k === "ok" || k === "left" || k === "right") { st.shuffle = !st.shuffle; u(); } else return "nav"; };
+  r3.act = () => { st.idx = {}; save(); r3.lastChild.textContent = "Cleared ✓"; };
+  u(); box.append(r1, r2, r3); r1.focus();
+}
+function move(dir) {
+  const els = [...S.querySelectorAll(".f")].filter(e => e.offsetParent);
+  const c = document.activeElement;
+  if (!els.includes(c)) { els[0]?.focus(); return; }
+  const r = c.getBoundingClientRect(); let best = null, bs = 1e9;
+  for (const e of els) {
+    if (e === c) continue;
+    const b = e.getBoundingClientRect();
+    const dx = b.left + b.width / 2 - (r.left + r.width / 2), dy = b.top + b.height / 2 - (r.top + r.height / 2);
+    const horiz = dir === "left" || dir === "right";
+    const p = horiz ? (dir === "right" ? dx : -dx) : (dir === "down" ? dy : -dy), s = Math.abs(horiz ? dy : dx);
+    if (p <= 4) continue;
+    const sc = p + s * 2.5; if (sc < bs) { bs = sc; best = e; }
+  }
+  best?.focus(); best?.scrollIntoView?.({block: "nearest"});
+}
+const KEYS = {ArrowLeft:"left", ArrowRight:"right", ArrowUp:"up", ArrowDown:"down", Enter:"ok", Escape:"back", Backspace:"back"};
+addEventListener("keydown", e => {
+  const k = KEYS[e.key]; if (!k) return; e.preventDefault();
+  const over = S.querySelector(".over");
+  if (over) { if (k === "ok") document.activeElement.act?.(); else if (k === "back") over.back(); else if (k === "left" || k === "right") move(k); return; }
+  const fe = document.activeElement;
+  if (active) { if (active(k) !== "nav") return; }
+  else if (fe && fe.key) { if (fe.key(k) !== "nav") return; }
+  if (k === "back") { back(); return; }
+  if (k === "ok") { fe.act ? fe.act() : fe.click?.(); return; }
+  move(k);
+});
+function fit() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); S.style.transform = `scale(${s})`; S.style.left = (innerWidth - 1920 * s) / 2 + "px"; S.style.top = (innerHeight - 1080 * s) / 2 + "px"; }
+addEventListener("resize", fit); fit(); go(home);
+</script></body></html>
