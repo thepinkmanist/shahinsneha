@@ -9,3 +9,7 @@ android-tv/android/app/build/
 android-tv/android/.gradle/
 android-tv/android/local.properties
 *.apk
+tv-photo-app/build/
+tv-photo-app/app/build/
+tv-photo-app/.gradle/
+tv-photo-app/local.properties
