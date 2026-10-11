@@ -39,3 +39,11 @@ Website side: dl.html (QR download page, no gate) and data/videos.json.
 ## Notes
 - tv-photo-app is in .assetsignore (must not be uploaded to Cloudflare) and build outputs are in .gitignore.
 - Existing android-tv/ (Capacitor website wrapper) is separate and unchanged.
+
+## Feedback after reviewing the browser preview (apply next session)
+- Settings: should be a button with an ICON (e.g. gear, top-right of the home header), not a tile in the grid.
+- RAW photos: must NOT appear on the home page. Still reachable (no password) — proposed: an entry inside Settings
+  ("RAW photos"). Confirm placement with the user.
+- "Play everything": keep the idea, but do not present it as a gallery tile/photo card — make it a prominent
+  Play button/banner instead (confirm exact look).
+- Home grid then = the 4 events (+ Videos tile) with the Play-everything button and Settings icon in the header area.
